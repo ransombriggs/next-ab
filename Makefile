@@ -1,5 +1,8 @@
 .PHONY: test
 
+install:
+	origami-build-tools install
+
 clean:
 	next-build-tools clean
 
