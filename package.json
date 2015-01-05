@@ -2,6 +2,7 @@
   "name": "ft-next-ab",
   "private": true,
   "dependencies": {
+    "forever": "^0.13.0",
     "ft-next-express": "^2.1.0",
     "next-build-tools": "^1.2.0"
   },
