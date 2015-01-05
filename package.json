@@ -1,0 +1,12 @@
+{
+  "name": "ft-next-ab",
+  "private": true,
+  "dependencies": {
+    "ft-next-express": "^2.1.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.1.0",
+    "origami-build-tools": "^2.6.1",
+    "supertest": "^0.15.0"
+  }
+}
