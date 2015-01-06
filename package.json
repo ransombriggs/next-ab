@@ -4,7 +4,8 @@
   "dependencies": {
     "forever": "^0.13.0",
     "ft-next-express": "^2.1.0",
-    "next-build-tools": "^1.2.0"
+    "next-build-tools": "^1.2.0",
+    "seedrandom": "^2.3.11"
   },
   "devDependencies": {
     "mocha": "^2.1.0",

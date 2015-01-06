@@ -14,7 +14,7 @@ describe('ab tests', function() {
 	it("Put me in a stickyNavigation on group", function(done) {
 		request(app)
 			.get('/ab')
-			.set('X-FT-User-Id', 8329130)
+			.set('X-FT-User-Id', 8164011)
 			.expect('set-cookie', /next-ab=stickyNavigation%3Aon; Path=\/; Expires=.+/)
 			.expect(302, done);
 	});
@@ -22,7 +22,7 @@ describe('ab tests', function() {
 	it("Put me in a stickyNavigation off group", function(done) {
 		request(app)
 			.get('/ab')
-			.set('X-FT-User-Id', 8329131)
+			.set('X-FT-User-Id', 8319028)
 			.expect('set-cookie', /next-ab=stickyNavigation%3Aoff; Path=\/; Expires=.+/)
 			.expect(302, done);
 	});
