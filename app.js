@@ -19,7 +19,7 @@ app.get('/ab', function(req, res) {
 				if (test.expires < expires) {
 					expires = test.expires;
 				}
-				switch(test.grouper({ eRightsId: eRightsId })) {
+				switch(test.allocate({ eRightsId: eRightsId })) {
 					case true:
 						return test.flag + ':on';
 					case false:
@@ -27,8 +27,8 @@ app.get('/ab', function(req, res) {
 				}
 			}).filter(function(test) {
 				return test !== undefined;
-			}).join(',');
-		res.cookie('next-ab', groups || 'none', { expires: expires });
+			});
+		res.cookie('next-ab', groups.join(',') || 'none', { expires: expires });
 	}
 
 	var destination = 'http://next.ft.com';

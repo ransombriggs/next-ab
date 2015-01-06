@@ -3,8 +3,7 @@
 module.exports = [
 	{
 		flag: "stickyNavigation",
-		grouper: function(options) {
-			
+		allocate: function(options) {
 			// TODO: Psuedo normalize `eRightsId`
 			var decider = options.eRightsId % 10;
 			switch(decider) {
