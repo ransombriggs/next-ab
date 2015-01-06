@@ -5,7 +5,11 @@ module.exports = [
 		flag: "stickyNavigation",
 		grouper: function(options) {
 			var decider = options.eRightsId % 10;
-			return decider === 0 ? true : (decider === 1 ? false : undefined);
+			switch(decider) {
+				case 0: return true;
+				case 1: return false;
+				default: return undefined;
+			}
 		},
 		expires: new Date("Sat Feb 01 2015 00:00:00 GMT+0000 (GMT)")
 	}
