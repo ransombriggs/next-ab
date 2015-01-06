@@ -10,7 +10,15 @@ app.get('/ab', function(req, res) {
 	if (eRightsId) {
 		var expires = new Date(Date.now() + 1000*60*60*24);
 		var groups = tests.map(function(test) {
-				if (test.expires < new Date()) return;
+				if (test.expires < new Date())  {
+					return;
+				}
+
+				// If the test expires before the default expiry,
+				// reduce the expiry
+				if (test.expires < expires) {
+					expires = test.expires;
+				}
 				switch(test.grouper({ eRightsId: eRightsId })) {
 					case true:
 						return test.flag + ':on';
