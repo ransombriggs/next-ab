@@ -2,8 +2,8 @@
 var tests = require('../models/tests');
 
 module.exports = function(req, res) {
-	var eRightsId = req.headers['x-ft-user-id'];
-	if (eRightsId) {
+	var erightsId = req.headers['x-ft-user-id'];
+	if (erightsId) {
 		var expires = new Date(Date.now() + 1000*60*60*24);
 		var groups = tests.map(function(test) {
 				if (test.expires < new Date())  {
@@ -15,7 +15,7 @@ module.exports = function(req, res) {
 				if (test.expires < expires) {
 					expires = test.expires;
 				}
-				switch(test.allocate({ eRightsId: eRightsId })) {
+				switch(test.allocate({ erightsId: erightsId })) {
 					case true:
 						return test.flag + ':on';
 					case false:

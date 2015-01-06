@@ -2,8 +2,8 @@
 
 require('seedrandom');
 
-function getNormalizedErights(eRightsId, min, max) {
-	Math.seedrandom(eRightsId);
+function getNormalizedErights(erightsId, min, max) {
+	Math.seedrandom(erightsId);
 
 	// Source MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 	// Returns a random integer between min (included) and max (excluded)
@@ -15,7 +15,7 @@ module.exports = [
 	{
 		flag: "stickyNavigation",
 		allocate: function(options) {
-			var decider = getNormalizedErights(options.eRightsId, 0, 9);
+			var decider = getNormalizedErights(options.erightsId, 0, 9);
 			switch(decider) {
 				case 0: return true;
 				case 1: return false;
