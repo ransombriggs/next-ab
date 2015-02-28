@@ -3,7 +3,6 @@
 
 var express = require('ft-next-express');
 var app = module.exports = express();
-var tests = require('./models/tests');
 
 app.get('/ab', require('./controllers/grouper'));
 

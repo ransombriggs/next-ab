@@ -1,9 +1,7 @@
 "use strict";
 
-var tests		= require('../models/tests')
+var tests		= require('../models/tests');
 var seedrandom	= require('seedrandom');
-
-console.log(tests);
 
 module.exports = function(req, res) {
 
@@ -17,7 +15,7 @@ module.exports = function(req, res) {
 			var rng = seedrandom(eRightsId + test.flag);
 			var group = (rng() > 0.5) ? 'variant' : 'control';
 			return test.flag + ':' + group;
-		})
+		});
 
 		res.cookie('next-ab', allocation.join(','), { expires: expires });
 	}
