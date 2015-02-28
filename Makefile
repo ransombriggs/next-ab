@@ -7,7 +7,7 @@ clean:
 	next-build-tools clean
 
 run:
-	export PORT=5050; node app.js
+	export PORT=5050; nodemon app.js
 
 test:
 	origami-build-tools verify
