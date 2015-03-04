@@ -16,10 +16,17 @@ describe('ab tests', function() {
 			.set('X-FT-User-Id', 1)
 			.expect(function (res) {
 				var allocation = res.headers['x-ft-ab'];
+				var cacheControl = res.headers['cache-control'];
 				var expectation = /aa:control,ab:control/;
+
 				if (!expectation.test(allocation)) {
 					throw 'Allocation ' + allocation + ' does not match ' + expectation;
 				}
+
+				if (cacheControl !== 'no-cache') {
+					throw 'Expected "no-cache" headers';
+				}
+
 			})
 			.expect(200, done);
 	});

@@ -7,6 +7,8 @@ module.exports = function(req, res, next) {
 
 	var eRightsId = req.headers['x-ft-user-id'];
 
+	res.setHeader('cache-control', 'no-cache');
+
 	if (eRightsId) {
 
 		var allocation = tests.map(function (test) {
