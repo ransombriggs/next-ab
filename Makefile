@@ -10,7 +10,7 @@ run:
 	export PORT=5050; nodemon app.js
 
 test:
-	#origami-build-tools verify
+	origami-build-tools verify
 	export PORT=5050; mocha
 
 deploy:

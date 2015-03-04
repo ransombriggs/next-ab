@@ -7,7 +7,7 @@ var app = require('../app');
 describe('ab tests', function() {
 
 	before(function(done) {
-		app.listen.then(done.bind(this, undefined))
+		app.listen.then(done.bind(this, undefined));
 	});
 
 	it("Allocate users to a control group", function(done) {
