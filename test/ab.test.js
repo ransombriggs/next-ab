@@ -15,12 +15,13 @@ describe('ab tests', function() {
 			.get('/ab')
 			.set('X-FT-User-Id', 1)
 			.expect(function (res) {
-				var a = res.headers['set-cookie'];
-				if (!/next-ab=aa%3Acontrol%2Cab%3Acontrol/.test(a)) {
-					throw a + ' did not meet expectation';
+				var allocation = res.headers['x-ft-ab'];
+				var expectation = /aa:control,ab:control/;
+				if (!expectation.test(allocation)) {
+					throw 'Allocation ' + allocation + ' does not match ' + expectation;
 				}
 			})
-			.expect(302, done);
+			.expect(200, done);
 	});
 
 });
