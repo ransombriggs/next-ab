@@ -12,7 +12,7 @@ describe('ab tests', function() {
 
 	it("Allocate users to a control group", function(done) {
 		request(app)
-			.get('/ab')
+			.get('/whatever/we/want')
 			.set('X-FT-User-Id', 1)
 			.expect(function (res) {
 				var allocation = res.headers['x-ft-ab'];
