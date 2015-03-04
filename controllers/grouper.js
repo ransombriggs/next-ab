@@ -3,13 +3,11 @@
 var tests		= require('../models/tests');
 var seedrandom	= require('seedrandom');
 
-module.exports = function(req, res) {
+module.exports = function(req, res, next) {
 
 	var eRightsId = req.headers['x-ft-user-id'];
 
 	if (eRightsId) {
-
-		var expires = new Date(Date.now() + 1000*60*60*24); // 1 day
 
 		var allocation = tests.map(function (test) {
 			var rng = seedrandom(eRightsId + test.flag);
@@ -17,14 +15,10 @@ module.exports = function(req, res) {
 			return test.flag + ':' + group;
 		});
 
-		res.cookie('next-ab', allocation.join(','), { expires: expires });
+		res.setHeader('x-ft-ab', allocation.join(','));
+		res.sendStatus(200).end();
+		return;
 	}
 
-	var destination = 'http://next.ft.com';
-
-	if (/https?:\/\/next.ft.com/.test(req.query.location)) {
-		destination = req.query.location;
-	}
-
-	res.redirect(302, destination);
+	res.sendStatus(200).end();
 };
