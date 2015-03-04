@@ -24,4 +24,10 @@ describe('ab tests', function() {
 			.expect(200, done);
 	});
 
+	it("Ignore users with no eRights", function(done) {
+		request(app)
+			.get('/ab')
+			.expect(200, done);
+	});
+
 });
