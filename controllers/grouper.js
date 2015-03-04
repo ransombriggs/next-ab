@@ -2,10 +2,13 @@
 
 var tests		= require('../models/tests');
 var seedrandom	= require('seedrandom');
+var debug		= require('debug')('next-ab');
 
 module.exports = function(req, res, next) {
 
 	var eRightsId = req.headers['x-ft-user-id'];
+
+	debug(req.headers);
 
 	res.setHeader('cache-control', 'no-cache');
 
