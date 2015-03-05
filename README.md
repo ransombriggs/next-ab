@@ -11,7 +11,7 @@ Usual Next rules apply - `make clean`, `make install`, `make run`, `make test`, 
 - As per usual, create a [feature
   flag](http://github.com/Financial-Times/next-feature-flags-api), build
   your feature, and release it.
-- Add the flag to the (current AB test list)[models/tests.js], and release
+- Add the flag to the [current AB test list](models/tests.js), and release
   this. At this point your AB test will be running. All data Next collects
   about a user will be tagged with the test name and variant the user belongs
   to.
@@ -24,7 +24,7 @@ You can then export the data and analyse it.
 - The flag should be turned _off_ for the duration of the test.
 - Segmentation is currently random. Users are split 50/50 in to a _control_ and
   a single _variant._
-- Each AB test is coupled to a flag. If the flag expires or changes name the AB
+- Each AB test is coupled to a feature flag. If the flag expires or changes name the AB
   test will become invalid. If you need to do that then just restart the test.
 
 ## To-do
