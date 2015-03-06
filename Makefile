@@ -11,7 +11,7 @@ run:
 
 test:
 	origami-build-tools verify
-	export PORT=5050; mocha
+	export HOSTEDGRAPHITE_APIKEY=1; export PORT=5050; mocha
 
 deploy:
 	next-build-tools deploy
