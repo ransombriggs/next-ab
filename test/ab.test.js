@@ -17,7 +17,7 @@ describe('ab tests', function() {
 			.expect(function (res) {
 				var allocation = res.headers['x-ft-ab'];
 				var cacheControl = res.headers['cache-control'];
-				var expectation = /aa:on,alphasurvey:on/;
+				var expectation = /aa:on/;
 
 				if (!expectation.test(allocation)) {
 					throw 'Allocation ' + allocation + ' does not match ' + expectation;
