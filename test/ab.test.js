@@ -10,6 +10,12 @@ describe('ab tests', function() {
 		app.listen.then(done.bind(this, undefined));
 	});
 
+	it("Should serve a list of tests a __tests", function(done) {
+		request(app)
+			.get('/__tests')
+			.expect(200, done);
+	});
+
 	it("Allocate users to a control group", function(done) {
 		request(app)
 			.get('/whatever/we/want')
