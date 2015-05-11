@@ -1,6 +1,7 @@
 .PHONY: test
 
 install:
+	npm install origami-build-tools
 	origami-build-tools install
 
 clean:
