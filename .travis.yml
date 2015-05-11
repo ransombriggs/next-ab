@@ -11,4 +11,4 @@ install:
 script:
   - make test
 after_success:
-  - make deploy
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && make deploy
