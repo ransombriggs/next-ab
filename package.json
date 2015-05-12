@@ -2,15 +2,13 @@
   "name": "ft-next-ab",
   "private": true,
   "dependencies": {
-    "debug": "^2.1.2",
-    "forever": "^0.13.0",
     "ft-next-express": "^2.1.0",
-    "next-build-tools": "^1.2.0",
     "seedrandom": "^2.3.11",
 	"next-metrics": "https://github.com/Financial-Times/next-metrics/archive/v1.2.1.tar.gz"
   },
   "devDependencies": {
     "mocha": "^2.1.0",
+    "next-build-tools": "^1.2.0",
     "nodemon": "^1.3.7",
     "origami-build-tools": "^2.6.1",
     "supertest": "^0.15.0"
