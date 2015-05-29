@@ -5,15 +5,15 @@ install:
 	origami-build-tools install
 
 clean:
-	nbt clean
+	git clean -xfd
 
 run:
 	export PORT=5050; nodemon app.js
 
 test:
-	nbt verify
+	nbt verify --skip-layout-checks
 	export HOSTEDGRAPHITE_APIKEY=1; export PORT=5050; mocha
 
 deploy:
-	nbt configure
+	nbt configure --no-splunk
 	nbt deploy

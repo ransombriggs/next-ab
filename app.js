@@ -2,11 +2,9 @@
 "use strict";
 
 var express		= require('ft-next-express');
-var Metrics		= require('next-metrics');
 var tests		= require('./models/tests');
 var app			= module.exports = express();
-
-Metrics.init({ app: 'ab', flushEvery: 30000 });
+var Metrics = express.metrics;
 
 app.get('/__gtg', function(req, res) {
 	res.status(200).send('OK');
