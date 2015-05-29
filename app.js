@@ -4,7 +4,10 @@
 var express		= require('ft-next-express');
 var Metrics		= require('next-metrics');
 var tests		= require('./models/tests');
-var app			= module.exports = express();
+var app			= module.exports = express({
+	withFlags: false,
+	withHandlebars: false
+});
 
 Metrics.init({ app: 'ab', flushEvery: 30000 });
 

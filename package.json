@@ -4,7 +4,7 @@
   "dependencies": {
     "debug": "^2.1.2",
     "forever": "^0.13.0",
-    "ft-next-express": "^2.1.0",
+    "ft-next-express": "^9.1.0",
     "seedrandom": "^2.3.11",
     "next-metrics": "https://github.com/Financial-Times/next-metrics/archive/v1.2.1.tar.gz"
   },
