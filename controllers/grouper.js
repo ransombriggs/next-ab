@@ -2,24 +2,49 @@
 
 var tests		= require('../models/tests');
 var seedrandom	= require('seedrandom');
-//var debug		= require('debug')('next-ab');
-var Metrics		= require('next-metrics');
+var debug		= require('debug')('next-ab');
+var Metrics		= require('ft-next-express').metrics;
+require('es6-promise').polyfill();
 
 module.exports = function(req, res, next) {
 
 	Metrics.instrument(res, { as: 'express.http.res' });
 	Metrics.instrument(req, { as: 'express.http.req' });
 
-	var eRightsId = req.headers['x-ft-user-id'];
+	// check for both new and deprecated headers for now
+	var sessionToken = req.get('FT-Session-Token') || req.get('X-FT-Session-Token');
+	res.set('Vary', 'FT-Session-Token');
+	res.set('cache-control', 'private, no-cache, max-age=0');
 
-	// debug(req.headers);
+	function noAB() {
+		res.setHeader('x-ft-ab', '-');
+		res.sendStatus(200).end();
+		return;
+	}
 
-	res.setHeader('cache-control', 'no-cache');
+	if(!sessionToken){
+		// Presently we don't segment non-signed out users
+		Metrics.count('erights.not-found'); // keep this for backwards compatibility
+		Metrics.count('sessionToken.not-found');
+		debug('No Session Token Found');
 
-	if (eRightsId) {
+		return noAB();
+	}
 
+	delete req.headers['host'];
+	fetch('https://session-next.ft.com/uuid', {headers:req.headers}).then(function(response){
+		if(!response.ok){
+			Metrics.count('uuid.not-found');
+			debug('No uuid found');
+			return noAB();
+		}
+
+		return response.json();
+	}).then(function(json){
+		var userID = json.uuid;
+		debug('UUID is %s', userID);
 		var allocation = tests.map(function (test) {
-			var rng = seedrandom(eRightsId + test.flag);
+			var rng = seedrandom(userID + test.flag);
 			var group = (rng() > 0.5) ? 'off' : 'on';
 			return test.flag + ':' + group;
 		});
@@ -35,13 +60,5 @@ module.exports = function(req, res, next) {
 		//debug('Found an eRights ID');
 		//debug(res._headers);
 		Metrics.count('erights.found');
-
-		return;
-	}
-
-	// Presently we don't segment non-signed out users
-	Metrics.count('erights.not-found');
-
-	res.setHeader('x-ft-ab', '-');
-	res.sendStatus(200).end();
+	});
 };
