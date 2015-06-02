@@ -3,7 +3,6 @@ language: node_js
 node_js:
   - "0.12.2"
 script:
-  - make install && make test && make provision
-  - make tidy
+  - make install && make test
 after_success:
   - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && make deploy
