@@ -7,5 +7,12 @@ module.exports = [
 		description: "An A/A test is an experiment where the two alternatives exactly the same. This helps to calibrate the A/B test tool.",
 		active: true,
 		owner: "matt.chadburn@ft.com"
+	},
+	{
+		flag: "homePageProminentFollowAB",
+		description: "Testing whehter a prominent call to action above top stories encourages more following",
+		expires: new Date("2015-07-01T00:00:00.000Z"),
+		active: true,
+		owner: "rhys.evans@ft.com"
 	}
 ];
