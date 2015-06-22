@@ -14,5 +14,12 @@ module.exports = [
 		expires: new Date("2015-07-01T00:00:00.000Z"),
 		active: true,
 		owner: "rhys.evans@ft.com"
+	},
+	{
+		flag: "myftEngagedFollow",
+		description: "Testing whehter a fixed call to action on stream pages encourages more following",
+		expires: new Date("2015-06-29T00:00:00.000Z"),
+		active: true,
+		owner: "patrick.hamann@ft.com"
 	}
 ];
