@@ -22,17 +22,40 @@ module.exports = function(req, res, next) {
 		return;
 	}
 
+ 	debug('request headers: %s', JSON.stringify(req.headers));
+
+ 	// FIXME diagnostics
+ 	if (req.get('ft-preflight-request')) {
+ 		Metrics.count('preflight.found.header');
+ 		if (sessionToken) {
+ 			Metrics.count('preflight.found.session_found');
+ 		} else {
+ 			Metrics.count('preflight.found.session_missing');
+ 		}
+ 	} else {		// beacon presumably
+ 		Metrics.count('preflight.missing.header');
+ 		if (sessionToken) {
+ 			Metrics.count('preflight.missing.session_found');
+ 		} else {
+ 			Metrics.count('preflight.missing.session_missing');
+ 		}
+ 	}
+
+ 	debug('session token: %s', JSON.stringify(sessionToken));
+
 	if(!sessionToken){
 		// Presently we don't segment non-signed out users
 		Metrics.count('erights.not-found'); // keep this for backwards compatibility
 		Metrics.count('sessionToken.not-found');
 		debug('No Session Token Found');
-
 		return noAB();
 	}
 
 	delete req.headers['host'];
-	fetch('https://session-next.ft.com/uuid', {headers:req.headers}).then(function(response){
+	fetch('https://session-next.ft.com/uuid', {
+			headers: req.headers
+	}).then(function(response){
+		
 		if(!response.ok){
 			Metrics.count('uuid.not-found');
 			debug('No uuid found');
@@ -60,5 +83,9 @@ module.exports = function(req, res, next) {
 		//debug('Found an eRights ID');
 		//debug(res._headers);
 		Metrics.count('erights.found');
-	});
+	})
+	.catch(function (err) {
+		debug('error extracting ab segment from session', err);
+		return noAB();
+	})
 };
