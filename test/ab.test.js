@@ -1,4 +1,4 @@
-/*global describe, it, before*/
+/*global describe, it, before, xit*/
 "use strict";
 
 var request = require('supertest');
@@ -37,7 +37,7 @@ describe('ab tests', function() {
 			.expect(200, done);
 	});
 
-	it("Ignore users with no eRights", function(done) {
+	xit("Ignore users with no eRights", function(done) {
 		request(app)
 			.get('/ab')
 			.expect(200, done);

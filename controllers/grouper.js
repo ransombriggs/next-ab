@@ -22,26 +22,26 @@ module.exports = function(req, res, next) {
 		return;
 	}
 
- 	debug('request headers: %s', JSON.stringify(req.headers));
+	debug('request headers: %s', JSON.stringify(req.headers));
 
- 	// FIXME diagnostics
- 	if (req.get('ft-preflight-request')) {
- 		Metrics.count('preflight.found.header');
- 		if (sessionToken) {
- 			Metrics.count('preflight.found.session_found');
- 		} else {
- 			Metrics.count('preflight.found.session_missing');
- 		}
- 	} else {		// beacon presumably
- 		Metrics.count('preflight.missing.header');
- 		if (sessionToken) {
- 			Metrics.count('preflight.missing.session_found');
- 		} else {
- 			Metrics.count('preflight.missing.session_missing');
- 		}
- 	}
+	// FIXME diagnostics
+	if (req.get('ft-preflight-request')) {
+		Metrics.count('preflight.found.header');
+			if (sessionToken) {
+				Metrics.count('preflight.found.session_found');
+			} else {
+				Metrics.count('preflight.found.session_missing');
+			}
+		} else {		// beacon presumably
+			Metrics.count('preflight.missing.header');
+			if (sessionToken) {
+				Metrics.count('preflight.missing.session_found');
+			} else {
+				Metrics.count('preflight.missing.session_missing');
+			}
+		}
 
- 	debug('session token: %s', JSON.stringify(sessionToken));
+	debug('session token: %s', JSON.stringify(sessionToken));
 
 	if(!sessionToken){
 		// Presently we don't segment non-signed out users
@@ -55,7 +55,7 @@ module.exports = function(req, res, next) {
 	fetch('https://session-next.ft.com/uuid', {
 			headers: req.headers
 	}).then(function(response){
-		
+
 		if(!response.ok){
 			Metrics.count('uuid.not-found');
 			debug('No uuid found');
@@ -87,5 +87,5 @@ module.exports = function(req, res, next) {
 	.catch(function (err) {
 		debug('error extracting ab segment from session', err);
 		return noAB();
-	})
+	});
 };
