@@ -26,5 +26,5 @@ tidy:
 	nbt destroy ${TEST_HOST}
 
 deploy:
-	nb --no-splunk
+	nbt configure --no-splunk
 	nbt deploy
