@@ -1,14 +1,17 @@
 sudo: false
 language: node_js
 node_js:
-- '0.12.2'
+- 0.12.2
 cache:
   directories:
-    - bower_components
-    - node_modules
-install:
-  - make install
+  - bower_components
+  - node_modules
 script:
-  - make test
+- make install && make test && make provision
+- make tidy
 after_success:
-  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && make deploy
+- test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && make
+  deploy
+notifications:
+  slack:
+    secure: hEHlF4jV1Irxf+NSkbdRp3R0Wz2r9F9v2xX359wxXmqTdO9ANz1zA4xoJ4tdHkWAoIOiw0SkdUx2zFlnzOJIKEvMDXI4caxBQvDsm3/ebC9vKecDcOMZsomauOFAs7m6VuXR6dg0ushp7DDfsgXLFwlSPrW6i2kbPcCorJbam6w=
