@@ -84,8 +84,9 @@ module.exports = function(req, res, next) {
 		//debug(res._headers);
 		Metrics.count('erights.found');
 	})
-	.catch(function (err) {
+	.catch(function(err) {
 		debug('error extracting ab segment from session', err);
 		return noAB();
-	});
+	})
+	.catch(next);
 };
