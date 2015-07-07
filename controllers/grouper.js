@@ -88,7 +88,7 @@ module.exports = function(req, res, next) {
 				}, function(err) {
 					debug('error extracting ab segment from session', err);
 					noAB();
-				})
+				});
 		})
 		.catch(next);
 };
