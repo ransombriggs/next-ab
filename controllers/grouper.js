@@ -19,7 +19,6 @@ module.exports = function(req, res, next) {
 	function noAB() {
 		res.setHeader('x-ft-ab', '-');
 		res.sendStatus(200).end();
-		return;
 	}
 
 	debug('request headers: %s', JSON.stringify(req.headers));
@@ -43,7 +42,7 @@ module.exports = function(req, res, next) {
 
 	debug('session token: %s', JSON.stringify(sessionToken));
 
-	if(!sessionToken){
+	if (!sessionToken) {
 		// Presently we don't segment non-signed out users
 		Metrics.count('erights.not-found'); // keep this for backwards compatibility
 		Metrics.count('sessionToken.not-found');
@@ -54,39 +53,42 @@ module.exports = function(req, res, next) {
 	delete req.headers['host'];
 	fetch('https://session-next.ft.com/uuid', {
 			headers: req.headers
-	}).then(function(response){
+		}).then(function(response) {
+			if (!response.ok) {
+				Metrics.count('uuid.not-found');
+				debug('No uuid found');
+				return noAB();
+			}
 
-		if(!response.ok){
-			Metrics.count('uuid.not-found');
-			debug('No uuid found');
-			return noAB();
-		}
+			return response.json()
+				.then(function(json) {
+					var userID = json.uuid;
+					debug('UUID is %s', userID);
+					var allocation = tests.map(function(test) {
+						var rng = seedrandom(userID + test.flag);
+						var group = (rng() > 0.5) ? 'off' : 'on';
+						return test.flag + ':' + group;
+					});
 
-		return response.json();
-	}).then(function(json){
-		var userID = json.uuid;
-		debug('UUID is %s', userID);
-		var allocation = tests.map(function (test) {
-			var rng = seedrandom(userID + test.flag);
-			var group = (rng() > 0.5) ? 'off' : 'on';
-			return test.flag + ':' + group;
-		});
 
-		res.setHeader('x-ft-ab', allocation.join(','));
-		res.sendStatus(200).end();
+					// See the test allocation in graphite
+					allocation.forEach(function(test) {
+						Metrics.count(test.replace(/:/g, '.'));
+					});
 
-		// See the test allocation in graphite
-		allocation.forEach(function (test) {
-			Metrics.count(test.replace(/:/g, '.'));
-		});
+					//debug('Found an eRights ID');
+					//debug(res._headers);
+					Metrics.count('erights.found');
 
-		//debug('Found an eRights ID');
-		//debug(res._headers);
-		Metrics.count('erights.found');
-	})
-	.catch(function(err) {
-		debug('error extracting ab segment from session', err);
-		return noAB();
-	})
-	.catch(next);
+					return allocation;
+				})
+				.then(function(allocation) {
+					res.setHeader('x-ft-ab', allocation.join(','));
+					res.sendStatus(200).end();
+				}, function(err) {
+					debug('error extracting ab segment from session', err);
+					noAB();
+				})
+		})
+		.catch(next);
 };
