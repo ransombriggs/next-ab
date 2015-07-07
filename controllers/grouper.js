@@ -63,10 +63,10 @@ module.exports = function(req, res, next) {
 		}
 
 		return response.json();
-	
+
 	}).then(function(json){
-		
-		if (json.uuid) {	
+
+		if (json.uuid) {
 			var userID = json.uuid;
 			debug('UUID is %s', userID);
 			var allocation = tests.map(function (test) {
@@ -74,10 +74,10 @@ module.exports = function(req, res, next) {
 				var group = (rng() > 0.5) ? 'off' : 'on';
 				return test.flag + ':' + group;
 			});
-			
+
 			res.setHeader('x-ft-ab', allocation.join(','));
 			res.sendStatus(200).end();
-			
+
 			// See the test allocation in graphite
 			allocation.forEach(function (test) {
 				Metrics.count(test.replace(/:/g, '.'));
@@ -86,7 +86,7 @@ module.exports = function(req, res, next) {
 			//debug('Found an eRights ID');
 			//debug(res._headers);
 			Metrics.count('erights.found');
-			
+
 		} else {
 			noAB();
 		}
