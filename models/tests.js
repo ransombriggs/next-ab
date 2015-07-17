@@ -14,5 +14,12 @@ module.exports = [
 		expires: new Date("2015-06-29T00:00:00.000Z"),
 		active: true,
 		owner: "patrick.hamann@ft.com"
+	},
+	{
+		flag: "ratingsMetadata",
+		description: "does adding star ratings to article cards in stream pages lead to more dwells on those articles?",
+		expires: new Date("2015-10-17T23:59:59.000Z"),
+		active: true,
+		owner: "patrick.hamann@ft.com"
 	}
 ];
