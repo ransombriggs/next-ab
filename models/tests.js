@@ -20,6 +20,6 @@ module.exports = [
 		description: "does adding star ratings to article cards in stream pages lead to more dwells on those articles?",
 		expires: new Date("2015-10-17T23:59:59.000Z"),
 		active: true,
-		owner: "patrick.hamann@ft.com"
+		owner: "matthew.andrews@ft.com"
 	}
 ];
