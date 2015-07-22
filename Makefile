@@ -20,11 +20,11 @@ test:
 provision:
 	next-build-tools provision ${TEST_HOST}
 	next-build-tools configure ft-next-ab ${TEST_HOST} --overrides "NODE_ENV=branch" --no-splunk
-	next-build-tools deploy ${TEST_HOST} --skip-enable-preboot
+	next-build-tools deploy ${TEST_HOST} --skip-enable-preboot --docker
 
 tidy:
 	nbt destroy ${TEST_HOST}
 
 deploy:
 	nbt configure --no-splunk
-	nbt deploy
+	nbt deploy --docker
