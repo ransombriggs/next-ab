@@ -9,15 +9,16 @@ var app			= module.exports = express({
 	withHandlebars: false
 });
 
-
-
-
 app.get('/__gtg', function(req, res) {
 	res.status(200).send('OK');
 });
 
 app.get('/__tests', function(req, res) {
 	res.json(tests);
+});
+
+app.get('/favicon.ico', function(req, res) {
+	res.status(404).end();
 });
 
 app.get('/', function(req, res) {
