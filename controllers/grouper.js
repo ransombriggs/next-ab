@@ -4,28 +4,18 @@ var tests = require('../models/tests');
 var seedrandom = require('seedrandom');
 var debug = require('debug')('next-ab');
 var Metrics = require('ft-next-express').metrics;
+var uuid = require('node-uuid');
 require('es6-promise').polyfill();
 
-module.exports = function(req, res, next) {
+// Metrics and debugging
+var doPaperwork = function(req, res) {
+	Metrics.instrument(res, { as: 'express.http.res' });
+	Metrics.instrument(req, { as: 'express.http.req' });
+	debug('request headers: %s', JSON.stringify(req.headers));
 
 	// Check for both new and deprecated headers for now
 	var sessionToken = req.get('FT-Session-Token') || req.get('X-FT-Session-Token');
-
-	Metrics.instrument(res, { as: 'express.http.res' });
-	Metrics.instrument(req, { as: 'express.http.req' });
-
-	// Couple the incoming http request to a uncachable response.
-	res.set('cache-control', 'private, no-cache, max-age=0');
-
-	function noAB() {
-		res.setHeader('x-ft-ab', '-');
-		res.sendStatus(200).end();
-		return;
-	}
-
-	debug('request headers: %s', JSON.stringify(req.headers));
-
-	// FIXME diagnostics
+	debug('session token: %s', JSON.stringify(sessionToken));
 	if (req.get('ft-preflight-request')) {
 		Metrics.count('preflight.found.header');
 		if (sessionToken) {
@@ -41,65 +31,96 @@ module.exports = function(req, res, next) {
 			Metrics.count('preflight.missing.session_missing');
 		}
 	}
+};
 
-	debug('session token: %s', JSON.stringify(sessionToken));
+// This logic for detecting the device ID could perhaps be
+// moved to preflight — assuming all requests go via preflight.
+// TODO: See how a "FT-Device-ID" cookie could be set by the CDN.
+var getDeviceID = function(req, res) {
+	var deviceID = (req.cookies && req.cookies['FT-Device-ID']) || req.get('FT-Device-ID') || req.headers['FT-Device-ID'] || uuid();
+	req.headers['FT-Device-ID'] = deviceID;
+	res.setHeader('FT-Device-ID', deviceID);
 
-	if(!sessionToken){
-
-		// Segment non-signed out users (assuming they're anonymous)
-		Metrics.count('erights.not-found'); // keep this for backwards compatibility
-		Metrics.count('sessionToken.not-found');
-		debug('No Session Token Found');
-	} else {
-
-		// See https://www.fastly.com/blog/best-practices-for-using-the-vary-header/
-		res.set('Vary', 'FT-Session-Token');
+	// don't set a cookie if present in the client request
+	if (!(req.cookies && req.cookies['FT-Device-ID']) && !req.headers['FT-Device-ID']) {
+		var tenYearsInSeconds = 60 * 60 * 24 * 365 * 10;
+		res.cookie('FT-Device-ID', deviceID, {
+			domain: 'next.ft.com',
+			maxAge: tenYearsInSeconds,
+			secure: true
+		});
 	}
 
-	delete req.headers['host'];
-	fetch('https://session-next.ft.com/uuid', {
+	return deviceID;
+};
+
+// allocationID is the ID to be used for AB segmentation
+// It can be either the device ID or the user's uuid.
+var getAllocationID = function(req, res){
+	var allocationID;
+
+	var isAnonymous = req.get('FT-Anonymous-User') || req.get('X-FT-Anonymous-User');
+	if (isAnonymous) {
+		allocationID = getDeviceID(req, res);
+	}
+	else {
+		// Fetch the user's uuid
+		delete req.headers['host'];
+		fetch('https://session-next.ft.com/uuid', {
 			headers: req.headers
-	}).then(function(response){
+		})
+		.then(function(response){
+			if(!response.ok){
+				Metrics.count('uuid.not-found');
+				debug('No uuid found');
+				return {};
+			} else {
+				return response.json();
+			}
+		})
+		.then(function(json){
+			if (json.uuid) {
+				allocationID = json.uuid;
+			}
+		})
+		.catch(function(err) {
+			debug('error determining user uuid', err);
+		});
+//		.catch(next);
+	}
 
-		if(!response.ok){
-			Metrics.count('uuid.not-found');
-			debug('No uuid found');
-			return {};
-		}
+	return allocationID || getDeviceID(req, res);
+};
 
-		return response.json();
+// Allocate the user into an a/b segment for each test
+var getAllocation = function(allocationID){
+	var allocation = tests.map(function (test) {
+		var rng = seedrandom(allocationID + test.flag);
+		var group = (rng() > 0.5) ? 'off' : 'on';
+		return test.flag + ':' + group;
+	});
+	return allocation;
+};
 
-	}).then(function(json){
+module.exports = function(req, res, next) {
+	if (req.method === 'OPTIONS') {
+		next();
+		return;
+	}
 
-		if (json.uuid) {
-			var userID = json.uuid;
-			debug('UUID is %s', userID);
-			var allocation = tests.map(function (test) {
-				var rng = seedrandom(userID + test.flag);
-				var group = (rng() > 0.5) ? 'off' : 'on';
-				return test.flag + ':' + group;
-			});
+	doPaperwork(req, res);
 
-			res.setHeader('x-ft-ab', allocation.join(','));
-			res.sendStatus(200).end();
+	// Couple the incoming http request to a uncachable response.
+	res.set('cache-control', 'private, no-cache, max-age=0');
 
-			// See the test allocation in graphite
-			allocation.forEach(function (test) {
-				Metrics.count(test.replace(/:/g, '.'));
-			});
+	var allocation = getAllocation(tests, getAllocationID(req, res));
 
-			//debug('Found an eRights ID');
-			//debug(res._headers);
-			Metrics.count('erights.found');
+	// See the test allocation in graphite
+	allocation.forEach(function (test) {
+		Metrics.count(test.replace(/:/g, '.'));
+	});
 
-		} else {
-			noAB();
-		}
-
-	})
-	.catch(function(err) {
-		debug('error extracting ab segment from session', err);
-		return noAB();
-	})
-	.catch(next);
+	res.setHeader('x-ft-ab', allocation.join(','));
+	res.sendStatus(200).end();
+	return;
 };
