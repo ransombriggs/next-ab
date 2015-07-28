@@ -8,12 +8,16 @@ require('es6-promise').polyfill();
 
 module.exports = function(req, res, next) {
 
+	// Check for both new and deprecated headers for now
+	var sessionToken = req.get('FT-Session-Token') || req.get('X-FT-Session-Token');
+
 	Metrics.instrument(res, { as: 'express.http.res' });
 	Metrics.instrument(req, { as: 'express.http.req' });
 
-	// check for both new and deprecated headers for now
-	var sessionToken = req.get('FT-Session-Token') || req.get('X-FT-Session-Token');
+	// See https://www.fastly.com/blog/best-practices-for-using-the-vary-header/
 	res.set('Vary', 'FT-Session-Token');
+
+	// Couple the incoming http request to a uncachable response.
 	res.set('cache-control', 'private, no-cache, max-age=0');
 
 	function noAB() {
