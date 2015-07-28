@@ -20,6 +20,7 @@ describe('smoke tests for the app', function() {
 	it("Should serve a list of tests at __tests", function(done) {
 		request(app)
 			.get('/__tests')
+			.expect('Content-Type', /json/)
 			.expect(200, done);
 	});
 
