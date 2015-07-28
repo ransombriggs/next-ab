@@ -31,19 +31,19 @@ module.exports = function(req, res, next) {
 	// FIXME diagnostics
 	if (req.get('ft-preflight-request')) {
 		Metrics.count('preflight.found.header');
-			if (sessionToken) {
-				Metrics.count('preflight.found.session_found');
-			} else {
-				Metrics.count('preflight.found.session_missing');
-			}
-		} else {		// beacon presumably
-			Metrics.count('preflight.missing.header');
-			if (sessionToken) {
-				Metrics.count('preflight.missing.session_found');
-			} else {
-				Metrics.count('preflight.missing.session_missing');
-			}
+		if (sessionToken) {
+			Metrics.count('preflight.found.session_found');
+		} else {
+			Metrics.count('preflight.found.session_missing');
 		}
+	} else {		// beacon presumably
+		Metrics.count('preflight.missing.header');
+		if (sessionToken) {
+			Metrics.count('preflight.missing.session_found');
+		} else {
+			Metrics.count('preflight.missing.session_missing');
+		}
+	}
 
 	debug('session token: %s', JSON.stringify(sessionToken));
 
