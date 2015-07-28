@@ -14,9 +14,6 @@ module.exports = function(req, res, next) {
 	Metrics.instrument(res, { as: 'express.http.res' });
 	Metrics.instrument(req, { as: 'express.http.req' });
 
-	// See https://www.fastly.com/blog/best-practices-for-using-the-vary-header/
-	res.set('Vary', 'FT-Session-Token');
-
 	// Couple the incoming http request to a uncachable response.
 	res.set('cache-control', 'private, no-cache, max-age=0');
 
@@ -48,11 +45,15 @@ module.exports = function(req, res, next) {
 	debug('session token: %s', JSON.stringify(sessionToken));
 
 	if(!sessionToken){
-		// Presently we don't segment non-signed out users
+
+		// Segment non-signed out users (assuming they're anonymous)
 		Metrics.count('erights.not-found'); // keep this for backwards compatibility
 		Metrics.count('sessionToken.not-found');
 		debug('No Session Token Found');
-		return noAB();
+	} else {
+
+		// See https://www.fastly.com/blog/best-practices-for-using-the-vary-header/
+		res.set('Vary', 'FT-Session-Token');
 	}
 
 	delete req.headers['host'];
