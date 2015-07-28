@@ -5,19 +5,19 @@ var request = require('supertest');
 var app = require('../app');
 
 
-describe('smoke tests for the app', function() {
+describe('Smoke tests: The app', function() {
 
 	before(function(done) {
 		app.listen.then(done.bind(this, undefined));
 	});
 
-	it("Should serve a __gtg page", function(done) {
+	it("should serve a __gtg page", function(done) {
 		request(app)
 			.get('/__gtg')
 			.expect(200, done);
 	});
 
-	it("Should serve a list of tests at __tests", function(done) {
+	it("should serve a list of tests at __tests", function(done) {
 		request(app)
 			.get('/__tests')
 			.expect('Content-Type', /json/)

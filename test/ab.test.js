@@ -14,24 +14,16 @@ var examples = [
 	}
 ];
 
-describe('AA test', function() {
+describe('AA Tests: App requests', function() {
 	before(function(done) {
 		app.listen.then(done.bind(this, undefined));
-	});
-
-	it("should set appropriate cache headers", function(done){
-		request(app)
-			.get('/whatever/we/want')
-			.set('X-FT-User-Id', 1)
-			.expect('cache-control', /no-cache/)
-			.expect(200, done);
 	});
 
 	// The "x-ft-ab" header refers to the "aa" flag in models/tests.js
 	examples.forEach(function(row){
 
 		// Subscribed users have a "x-ft-user-id" header
-		it("should allocate subscribed users to the correct AB group", function(done) {
+		it("should set the correct AA flag (subscribed users)", function(done) {
 			request(app)
 				.get('/aa')
 				.set('x-ft-user-id', row.id)
@@ -40,7 +32,7 @@ describe('AA test', function() {
 		});
 
 		// Anonymous users have a "x-ft-device-id" header
-		it("should allocate anonymous users to the correct AB group", function(done) {
+		it("should set the correct AA flag (anonymous users)", function(done) {
 			request(app)
 				.get('/aa')
 				.set('x-ft-device-id', row.id)
