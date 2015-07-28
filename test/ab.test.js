@@ -1,40 +1,52 @@
-/*global describe, it, before, xit*/
+/*global describe, it, before */
 "use strict";
 
 var request = require('supertest');
 var app = require('../app');
+var examples = [
+	{
+		id: "1",
+		expectedHeaderValue: /aa:on/
+	},
+	{
+		id: "2",
+		expectedHeaderValue: /aa:off/
+	}
+];
 
-describe('ab tests', function() {
-
+describe('AA test', function() {
 	before(function(done) {
 		app.listen.then(done.bind(this, undefined));
 	});
 
-	it("Allocate users to a control group", function(done) {
+	it("should set appropriate cache headers", function(done){
 		request(app)
 			.get('/whatever/we/want')
 			.set('X-FT-User-Id', 1)
-			.expect(function (res) {
-				var allocation = res.headers['x-ft-ab'];
-				var cacheControl = res.headers['cache-control'];
-				var expectation = /aa:on/;
-
-				if (!expectation.test(allocation)) {
-					throw 'Allocation ' + allocation + ' does not match ' + expectation;
-				}
-
-				if (cacheControl !== 'no-cache') {
-					throw 'Expected "no-cache" headers';
-				}
-
-			})
+			.expect('cache-control', /no-cache/)
 			.expect(200, done);
 	});
 
-	xit("Ignore users with no eRights", function(done) {
-		request(app)
-			.get('/ab')
-			.expect(200, done);
-	});
+	// The "x-ft-ab" header refers to the "aa" flag in models/tests.js
+	examples.forEach(function(row){
 
+		// Subscribed users have a "x-ft-user-id" header
+		it("should allocate subscribed users to the correct AB group", function(done) {
+			request(app)
+				.get('/aa')
+				.set('x-ft-user-id', row.id)
+				.expect('x-ft-ab', row.expectedHeaderValue)
+				.expect(200, done);
+		});
+
+		// Anonymous users have a "x-ft-device-id" header
+		it("should allocate anonymous users to the correct AB group", function(done) {
+			request(app)
+				.get('/aa')
+				.set('x-ft-device-id', row.id)
+				.expect('x-ft-ab', row.expectedHeaderValue)
+				.expect(200, done);
+		});
+
+	});
 });
