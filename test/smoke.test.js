@@ -17,4 +17,10 @@ describe('smoke tests for the app', function() {
 			.expect(200, done);
 	});
 
+	it("Should serve a list of tests at __tests", function(done) {
+		request(app)
+			.get('/__tests')
+			.expect(200, done);
+	});
+
 });
