@@ -13,9 +13,12 @@ clean:
 run:
 	export PORT=5050; nodemon app.js
 
-test:
+test: build-production
 	nbt verify --skip-layout-checks
 	export HOSTEDGRAPHITE_APIKEY=1; export PORT=5050; mocha
+
+build-production:
+	nbt about
 
 provision:
 	next-build-tools provision ${TEST_HOST}
