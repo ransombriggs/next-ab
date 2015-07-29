@@ -8,14 +8,13 @@ var uuid = require('node-uuid');
 require('es6-promise').polyfill();
 
 // Metrics and debugging
-var doPaperwork = function(req, res) {
+var doDebuggingPaperwork = function(req, res) {
 	Metrics.instrument(res, { as: 'express.http.res' });
 	Metrics.instrument(req, { as: 'express.http.req' });
-	debug('request headers: %s', JSON.stringify(req.headers));
 
 	// Check for both new and deprecated headers for now
+	// See: http://git.svc.ft.com/projects/NEXT/repos/preflight-requests/browse/src/tasks/session.js
 	var sessionToken = req.get('FT-Session-Token') || req.get('X-FT-Session-Token');
-	debug('session token: %s', JSON.stringify(sessionToken));
 	if (req.get('ft-preflight-request')) {
 		Metrics.count('preflight.found.header');
 		if (sessionToken) {
@@ -33,43 +32,54 @@ var doPaperwork = function(req, res) {
 	}
 };
 
-// This logic for detecting the device ID could perhaps be
-// moved to preflight — assuming all requests go via preflight.
-// TODO: See how a "FT-Device-ID" cookie could be set by the CDN.
-var getDeviceID = function(req, res) {
-	var deviceID = (req.cookies && req.cookies['FT-Device-ID']) || req.get('FT-Device-ID') || req.headers['FT-Device-ID'] || uuid();
-	req.headers['FT-Device-ID'] = deviceID;
-	res.setHeader('FT-Device-ID', deviceID);
 
-	// don't set a cookie if present in the client request
-	if (!(req.cookies && req.cookies['FT-Device-ID']) && !req.headers['FT-Device-ID']) {
-		var tenYearsInSeconds = 60 * 60 * 24 * 365 * 10;
-		res.cookie('FT-Device-ID', deviceID, {
-			domain: 'next.ft.com',
-			maxAge: tenYearsInSeconds,
-			secure: true
-		});
+// TODO: The device ID ought to be provided by preflight — assuming that
+// all requests go via preflight — and stored as a cookie in the CDN.
+// See: http://git.svc.ft.com/projects/NEXT/repos/preflight-requests/browse/src/tasks/session.js
+var getDeviceID = function(req, res) {
+
+	var deviceID =
+		req.get('FT-Device-ID') ||
+		req.headers['FT-Device-ID'] ||
+		req.get('X-FT-Device-ID') ||
+		req.headers['X-FT-Device-ID'];
+
+	if (!deviceID) {
+		debug("Device ID not provided. Generating one at random.");
+		deviceID = uuid();
+		req.headers['X-FT-Device-ID'] = deviceID;
+		res.setHeader('X-FT-Device-ID', deviceID);
 	}
 
 	return deviceID;
 };
 
-// allocationID is the ID to be used for AB segmentation
+// The allocationID is the ID to be used for AB segmentation
 // It can be either the device ID or the user's uuid.
 var getAllocationID = function(req, res){
-	var allocationID;
 
-	var isAnonymous = req.get('FT-Anonymous-User') || req.get('X-FT-Anonymous-User');
+	// TODO: Cast a narrower net here
+	// See: http://git.svc.ft.com/projects/NEXT/repos/preflight-requests/browse/src/tasks/session.js
+	var isAnonymous =
+		req.headers['ft-anonymous-user'] ||
+		req.headers['x-ft-anonymous-user'] ||
+		req.get('ft-anonymous-user') ||
+		req.get('x-ft-anonymous-user');
+
 	if (isAnonymous) {
-		allocationID = getDeviceID(req, res);
+		return Promise.resolve(getDeviceID(req, res));
 	}
 	else {
-		// Fetch the user's uuid
+
+		// Fetch the user's uuid.
+		// The headers must include a valid FT session token, provided by preflight.
+		// See: http://git.svc.ft.com/projects/NEXT/repos/preflight-requests/browse/src/tasks/session.js
 		delete req.headers['host'];
-		fetch('https://session-next.ft.com/uuid', {
+		return fetch('https://session-next.ft.com/uuid', {
 			headers: req.headers
 		})
 		.then(function(response){
+
 			if(!response.ok){
 				Metrics.count('uuid.not-found');
 				debug('No uuid found');
@@ -80,20 +90,23 @@ var getAllocationID = function(req, res){
 		})
 		.then(function(json){
 			if (json.uuid) {
-				allocationID = json.uuid;
+				return json.uuid;
 			}
+
+			debug("Not anonymous, but didn't find uuid, so getting device ID");
+			return getDeviceID(req, res);
 		})
 		.catch(function(err) {
-			debug('error determining user uuid', err);
+			debug('Error determining user uuid', err);
 		});
-//		.catch(next);
 	}
-
-	return allocationID || getDeviceID(req, res);
 };
 
 // Allocate the user into an a/b segment for each test
-var getAllocation = function(allocationID){
+var getAllocation = function(tests, allocationID){
+
+	debug("allocationID: ",allocationID);
+
 	var allocation = tests.map(function (test) {
 		var rng = seedrandom(allocationID + test.flag);
 		var group = (rng() > 0.5) ? 'off' : 'on';
@@ -103,24 +116,37 @@ var getAllocation = function(allocationID){
 };
 
 module.exports = function(req, res, next) {
+
+	// Set up metrics and do some initial debug tracking
+	doDebuggingPaperwork(req, res);
+
 	if (req.method === 'OPTIONS') {
 		next();
 		return;
 	}
 
-	doPaperwork(req, res);
-
 	// Couple the incoming http request to a uncachable response.
 	res.set('cache-control', 'private, no-cache, max-age=0');
 
-	var allocation = getAllocation(tests, getAllocationID(req, res));
+	getAllocationID(req, res).then(function(id) {
+		var allocation = getAllocation(tests, id);
 
-	// See the test allocation in graphite
-	allocation.forEach(function (test) {
-		Metrics.count(test.replace(/:/g, '.'));
+		debug("User A/B allocation: ",allocation.join(', '));
+
+		// See the test allocation in graphite
+		allocation.forEach(function (test) {
+			Metrics.count(test.replace(/:/g, '.'));
+		});
+
+		// Set the allocation header and end the response
+		res.setHeader('X-FT-AB', allocation.join(','));
+		res.sendStatus(200);
+		next();
+		return;
+	}).catch(function(e) {
+		debug("Error getting the allocation ID");
+		res.sendStatus(500);
+		next();
+		return;
 	});
-
-	res.setHeader('x-ft-ab', allocation.join(','));
-	res.sendStatus(200).end();
-	return;
 };
