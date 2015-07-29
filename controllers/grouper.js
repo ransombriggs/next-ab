@@ -1,6 +1,5 @@
 "use strict";
 
-var tests = require('../models/tests');
 var seedrandom = require('seedrandom');
 var debug = require('debug')('next-ab');
 var Metrics = require('ft-next-express').metrics;
@@ -32,6 +31,18 @@ var doDebuggingPaperwork = function(req, res) {
 	}
 };
 
+var getABTests = function(flagsArray) {
+	var flagsWithABTests = flagsArray.filter(function (flag) {
+		return flag.abTestState === true;
+	});
+	if (!flagsWithABTests || flagsWithABTests.length <= 0) {
+		debug("Could not find any feature flags with AB tests");
+		return [];
+	}
+	else {
+		return flagsWithABTests;
+	}
+};
 
 // TODO: The device ID ought to be provided by preflight — assuming that
 // all requests go via preflight — and stored as a cookie in the CDN.
@@ -108,9 +119,9 @@ var getAllocation = function(tests, allocationID){
 	debug("allocationID: ",allocationID);
 
 	var allocation = tests.map(function (test) {
-		var rng = seedrandom(allocationID + test.flag);
+		var rng = seedrandom(allocationID + test.name);
 		var group = (rng() > 0.5) ? 'off' : 'on';
-		return test.flag + ':' + group;
+		return test.name + ':' + group;
 	});
 	return allocation;
 };
@@ -129,6 +140,10 @@ module.exports = function(req, res, next) {
 	res.set('cache-control', 'private, no-cache, max-age=0');
 
 	getAllocationID(req, res).then(function(id) {
+
+		// res.locals.flagsArray is provided by next-express
+		var tests = getABTests(res.locals.flagsArray);
+
 		var allocation = getAllocation(tests, id);
 
 		debug("User A/B allocation: ",allocation.join(', '));
