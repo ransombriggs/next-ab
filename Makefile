@@ -12,7 +12,7 @@ run:
 
 test:
 	nbt verify --skip-layout-checks
-	export HOSTEDGRAPHITE_APIKEY=1; export PORT=5050; mocha
+	export HOSTEDGRAPHITE_APIKEY=1; export PORT=5101; mocha ./tests
 
 deploy:
 	nbt configure --no-splunk
