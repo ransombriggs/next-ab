@@ -7,6 +7,10 @@ var app = module.exports = express({
 	withHandlebars: false
 });
 
+app.get('/favicon.ico', function(req, res) {
+	res.status(404).end();
+});
+
 app.get('/__gtg', function(req, res) {
 	res.status(200).send('OK');
 });
