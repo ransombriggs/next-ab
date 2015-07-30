@@ -9,17 +9,17 @@ module.exports = [
 		owner: "matt.chadburn@ft.com"
 	},
 	{
-		flag: "homePageProminentFollowAB",
-		description: "Testing whehter a prominent call to action above top stories encourages more following",
-		expires: new Date("2015-07-01T00:00:00.000Z"),
-		active: true,
-		owner: "rhys.evans@ft.com"
-	},
-	{
 		flag: "myftEngagedFollow",
 		description: "Testing whehter a fixed call to action on stream pages encourages more following",
 		expires: new Date("2015-06-29T00:00:00.000Z"),
 		active: true,
 		owner: "patrick.hamann@ft.com"
+	},
+	{
+		flag: "ratingsMetadata",
+		description: "does adding star ratings to article cards in stream pages lead to more dwells on those articles?",
+		expires: new Date("2015-10-17T23:59:59.000Z"),
+		active: true,
+		owner: "matthew.andrews@ft.com"
 	}
 ];
