@@ -1,6 +1,5 @@
 "use strict";
 
-var tests		= require('../models/tests');
 var seedrandom	= require('seedrandom');
 var debug		= require('debug')('next-ab');
 var Metrics		= require('ft-next-express').metrics;
