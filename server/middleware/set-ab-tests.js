@@ -1,6 +1,22 @@
 "use strict";
 
-var getABTests = function(flagsArray) {
+// Set the AB tests array as an app variable.
+module.exports = function(req,res) {
+
+	app.set('abTests',[
+		{
+			name:'aa'
+		},
+		{
+			name:'foo'
+		},
+		{
+			name:'bar'
+		}
+	]);
+	next();
+
+/*
 	var flagsWithABTests = flagsArray.filter(function (flag) {
 		return flag.abTestState === true;
 	});
@@ -11,3 +27,5 @@ var getABTests = function(flagsArray) {
 	else {
 		return flagsWithABTests;
 	}
+*/
+};
