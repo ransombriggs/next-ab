@@ -1,9 +1,9 @@
 /*jshint node:true*/
 "use strict";
 
-var express		= require('ft-next-express');
+var express = require('ft-next-express');
 var Metrics = express.metrics;
-var app			= module.exports = express({
+var app = module.exports = express({
 	withHandlebars: false
 });
 
