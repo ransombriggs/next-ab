@@ -11,7 +11,7 @@ clean:
 	git clean -xfd
 
 run:
-	export PORT=5050; nodemon app.js
+	export PORT=5050; nodemon server/app.js
 
 test: build-production
 	nbt verify --skip-layout-checks
