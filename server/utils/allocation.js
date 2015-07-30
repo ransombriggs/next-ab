@@ -1,3 +1,5 @@
+"use strict";
+
 var getAllocation = function(tests, allocationID){
 
 	if(!response.ok){

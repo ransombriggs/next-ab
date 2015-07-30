@@ -1,3 +1,5 @@
+"use strict";
+
 var getABTests = function(flagsArray) {
 	var flagsWithABTests = flagsArray.filter(function (flag) {
 		return flag.abTestState === true;
