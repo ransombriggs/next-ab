@@ -9,31 +9,31 @@ require('es6-promise').polyfill();
 module.exports = function(req, res, next) {
 
 
-	// FIXME the flow I think is something like this 
+	// FIXME the flow I think is something like this
 
 	var uuid = req.header['ft-user-id'] || req.header['x-ft-user-id'];
 	var session = req.header['ft-session'] || req.header['x-ft-session'];
 	var isAnonymous = req.headers['ft-anonymous-user'];
 
 	if (uuid) {
-		
+
 		return allocate(uuid, tests);	// where 'allocate' is server/utils/allocation.js
 
 	} else if (session) {
-		
+
 		return allocate(session, tests);
-	
+
 	} else if (isAnonymous) {
-		
+
 		return allocate(generateDeviceId(), tests);
-	
+
 	} else {
-	
+
 		return allocate(undefined, tests); // i.e., always allocated to '-' group
-	
+
 	}
 
-	
+
 
 
 
