@@ -5,19 +5,15 @@ var express		= require('ft-next-express');
 var Metrics = express.metrics;
 var tests		= require('./models/tests');
 var app			= module.exports = express({
-	withFlags: false,
 	withHandlebars: false
 });
-
-
-
 
 app.get('/__gtg', function(req, res) {
 	res.status(200).send('OK');
 });
 
 app.get('/__tests', function(req, res) {
-	res.json(tests);
+	res.json(res.locals.flagsArray);
 });
 
 app.get('/', function(req, res) {
