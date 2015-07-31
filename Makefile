@@ -13,7 +13,7 @@ clean:
 run:
 	export PORT=5050; nodemon server/app.js
 
-test: build-production
+test:
 	nbt verify --skip-layout-checks
 	export HOSTEDGRAPHITE_APIKEY=1; export PORT=5101; mocha ./tests
 
