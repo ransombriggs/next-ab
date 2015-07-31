@@ -81,7 +81,7 @@ describe('A/B allocation API', function () {
 
 	// Case: "ft-device-id" header is provided
 	// e.g. curl -H 'ft-device-id: ...' ft-next-ab.herokuapp.com/foo
-	it.skip('should return an x-ft-ab header based on a user\'s device id', function (done) {
+	it('should return an x-ft-ab header based on a user\'s device id', function (done) {
 		fetch('http://localhost:5101/foo', {
 			headers: {
 				'ft-device-id': 'abc-123'
