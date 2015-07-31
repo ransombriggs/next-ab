@@ -21,7 +21,7 @@ build-production:
 	nbt about
 
 provision:
-	build-production
+	next-build-tools about
 	next-build-tools provision ${TEST_HOST}
 	next-build-tools configure ft-next-ab ${TEST_HOST} --overrides "NODE_ENV=branch" --no-splunk
 	next-build-tools deploy ${TEST_HOST} --skip-enable-preboot --docker
