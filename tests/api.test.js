@@ -42,7 +42,6 @@ describe('A/B allocation API', function () {
 			}
 		})
 		.then(function (res) {
-			expect(res.status).to.equal(200);
 			expect(res.headers.get('x-ft-ab')).to.equal('-');
 			done();
 		}).catch(err);
@@ -50,14 +49,14 @@ describe('A/B allocation API', function () {
 
 	// Case: "ft-user-id" header is provided
 	// e.g. curl -H 'ft-user-id: ...' ft-next-ab.herokuapp.com/foo
-	it.skip('should return an x-ft-ab header based on a user\'s uuid', function (done) {
+	it('should return an x-ft-ab header based on a user\'s uuid', function (done) {
 		fetch('http://localhost:5101/foo', {
 			headers: {
 				'ft-user-id': 'abc-123'
 			}
 		})
 		.then(function (res) {
-			expect(res.status).to.equal(200);
+			expect(res.headers.get('x-ft-ab')).to.match(/aa:(on|off)/);
 			done();
 		}).catch(err);
 	});
@@ -71,7 +70,7 @@ describe('A/B allocation API', function () {
 			}
 		})
 		.then(function (res) {
-			expect(res.status).to.equal(200);
+			expect(res.headers.get('x-ft-ab')).to.match(/aa:(on|off)/);
 			done();
 		}).catch(err);
 	});
@@ -85,7 +84,7 @@ describe('A/B allocation API', function () {
 			}
 		})
 		.then(function (res) {
-			expect(res.status).to.equal(200);
+			expect(res.headers.get('x-ft-ab')).to.match(/aa:(on|off)/);
 			done();
 		}).catch(err);
 	});
@@ -99,7 +98,7 @@ describe('A/B allocation API', function () {
 			}
 		})
 		.then(function (res) {
-			expect(res.status).to.equal(200);
+			expect(res.headers.get('x-ft-ab')).to.match(/aa:(on|off)/);
 			done();
 		}).catch(err);
 	});
@@ -109,7 +108,6 @@ describe('A/B allocation API', function () {
 	it('should return a blank x-ft-ab header to requests that provide no headers', function (done) {
 		fetch('http://localhost:5101/foo')
 			.then(function (res) {
-				expect(res.status).to.equal(200);
 				expect(res.headers.get('x-ft-ab')).to.equal('-');
 				done();
 			}).catch(err);

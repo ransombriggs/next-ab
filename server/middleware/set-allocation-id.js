@@ -61,7 +61,7 @@ module.exports = function(req,res,next){
 		.then(function(allocationID) {
 
 			// TODO: Make the CDN cache the allocationID?
-			res.app.set('allocationID',allocationID);
+			res.locals.allocationID = allocationID;
 			next();
 		})
 		.catch(function(e) {

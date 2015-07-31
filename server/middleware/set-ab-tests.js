@@ -1,7 +1,7 @@
 
 "use strict";
 
-// Set the AB tests array as an app variable.
+// Set the AB tests array as a local variable.
 module.exports = function(req,res,next) {
 
 	// Note: res.locals.flagsArray is provided by next-express.
@@ -9,6 +9,6 @@ module.exports = function(req,res,next) {
 		return flag.abTestState === true;
 	});
 
-	res.app.set('abTests',flagsWithABTests);
+	res.locals.abTests = flagsWithABTests;
 	next();
 };

@@ -18,7 +18,7 @@ app.get('/__gtg', function(req, res) {
 	res.status(200).send('OK');
 });
 
-// Set the A/B tests array as an app variable
+// Set the A/B tests array as a local variable
 app.use(setABTests);
 
 app.get('/__tests', function(req, res) {
@@ -29,7 +29,7 @@ app.get('/', function(req, res) {
 	res.redirect(302, 'https://github.com/financial-times/next-ab');
 });
 
-// Set the allocation ID as an app variable
+// Set the allocation ID as a local variable
 app.use(setAllocationID);
 
 // Set the A/B allocation as a response header

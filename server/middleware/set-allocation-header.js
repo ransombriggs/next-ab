@@ -5,8 +5,8 @@ var seedrandom = require('seedrandom');
 
 module.exports = function(req,res,next){
 	var allocationHeader = '-';
-	var allocationID = res.app.get('allocationID');
-	var abTests = res.app.get('abTests');
+	var allocationID = res.locals.allocationID;
+	var abTests = res.locals.abTests;
 
 	if (allocationID && abTests) {
 		var allocation = abTests.map(function (test) {
