@@ -33,6 +33,21 @@ describe('A/B allocation API', function () {
 			}).catch(err);
 	});
 
+	// Case: "ft-session-api-fail" header is provided
+	// e.g. curl -H 'ft-session-api-fail: true' ft-next-ab.herokuapp.com/foo
+	it('should return a blank x-ft-ab header to requests that failed preflight session validation', function (done) {
+		return fetch('http://localhost:5101/foo', {
+			headers: {
+				'ft-preflight-session-failure': 'true' // FIXME: needs adding to CDN
+			}
+		})
+		.then(function (res) {
+			expect(res.status).to.equal(200);
+			expect(res.headers.get('x-ft-ab')).to.equal('-');
+			done();
+		}).catch(err);
+	});
+
 	// Case: "ft-user-id" header is provided
 	// e.g. curl -H 'ft-user-id: ...' ft-next-ab.herokuapp.com/foo
 	it.skip('should return an x-ft-ab header based on a user\'s uuid', function (done) {
@@ -61,21 +76,6 @@ describe('A/B allocation API', function () {
 		}).catch(err);
 	});
 
-	// Case: "ft-anonymous-user" header is provided
-	// (boolean; set if it detects no valid session)
-	// e.g. curl -H 'ft-anonymous-user: true' ft-next-ab.herokuapp.com/foo
-	it.skip('should return an x-ft-ab header based on an anonymous user\'s (generated) device id', function (done) {
-		fetch('http://localhost:5101/foo', {
-			headers: {
-				'ft-anonymous-user': 'true'
-			}
-		})
-		.then(function (res) {
-			expect(res.status).to.equal(200);
-			done();
-		}).catch(err);
-	});
-
 	// Case: "ft-device-id" header is provided
 	// e.g. curl -H 'ft-device-id: ...' ft-next-ab.herokuapp.com/foo
 	it.skip('should return an x-ft-ab header based on a user\'s device id', function (done) {
@@ -90,18 +90,16 @@ describe('A/B allocation API', function () {
 		}).catch(err);
 	});
 
-	// Case: "ft-session-api-fail" header is provided
-	//  ... user is possibly signed in, but preflight / session validation failed (http 5xx)
-	// e.g. curl -H 'ft-session-api-fail: true' ft-next-ab.herokuapp.com/foo
-	it('should return a blank x-ft-ab header to requests that failed preflight session validation', function (done) {
-		return fetch('http://localhost:5101/foo', {
+	// Case: "ft-anonymous-user" header is provided
+	// e.g. curl -H 'ft-anonymous-user: true' ft-next-ab.herokuapp.com/foo
+	it.skip('should return an x-ft-ab header based on an anonymous user\'s (generated) device id', function (done) {
+		fetch('http://localhost:5101/foo', {
 			headers: {
-				'ft-preflight-session-failure': 'true' // FIXME: needs adding to CDN
+				'ft-anonymous-user': 'true'
 			}
 		})
 		.then(function (res) {
 			expect(res.status).to.equal(200);
-			expect(res.headers.get('x-ft-ab')).to.equal('-');
 			done();
 		}).catch(err);
 	});

@@ -65,7 +65,7 @@ module.exports = function(req,res,next){
 			next();
 		})
 		.catch(function(e) {
-			console.log('Error:',e);
+			console.log(e);
 			next();
 		});
 };
