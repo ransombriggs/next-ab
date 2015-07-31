@@ -1,4 +1,7 @@
+
 "use strict";
+
+var seedrandom = require('seedrandom');
 
 module.exports = function(req,res,next){
 	var allocationHeader = '-';
@@ -12,7 +15,7 @@ module.exports = function(req,res,next){
 			return test.name + ':' + group;
 		});
 		if (allocation.length > 0) {
-			allocationHeader = join(',',allocation);
+			allocationHeader = allocation.join(',');
 		}
 	}
 

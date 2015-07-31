@@ -1,10 +1,10 @@
+
 "use strict";
 
 var nodeUuid = require('node-uuid');
 
 // Set the allocation ID as an app variable.
 var getAllocationID = function(req, res){
-	var allocationID;
 
 	// Requests receive an A/B allocation for each feature that has an active A/B test.
 	// A/B allocation is based on an allocation ID. Ideally the allocation ID is the
@@ -15,7 +15,6 @@ var getAllocationID = function(req, res){
 	var session = req.get('ft-session-token') || req.get('x-ft-session-token');
 	var deviceID = req.get('ft-device-id') || req.get('x-ft-device-id');
 	var isAnonymous = req.get('ft-anonymous-user') || req.get('x-ft-anonymous-user');
-
 
 	// If preflight could not validate the session, don't allocate A/B tests.
 	if (sessionFailure) {
@@ -60,7 +59,9 @@ var getAllocationID = function(req, res){
 module.exports = function(req,res,next){
 	getAllocationID(req, res)
 		.then(function(allocationID) {
-			app.set('allocationID',allocationID);
+
+			// TODO: Make the CDN cache the allocationID?
+			res.app.set('allocationID',allocationID);
 			next();
 		})
 		.catch(function(e) {
