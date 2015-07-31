@@ -95,7 +95,7 @@ describe('A/B allocation API', function () {
 
 	// Case: "ft-anonymous-user" header is provided
 	// e.g. curl -H 'ft-anonymous-user: true' ft-next-ab.herokuapp.com/foo
-	it.skip('should return an x-ft-ab header based on an anonymous user\'s (generated) device id', function (done) {
+	it('should return an x-ft-ab header based on an anonymous user\'s (generated) device id', function (done) {
 		fetch('http://localhost:5101/foo', {
 			headers: {
 				'ft-anonymous-user': 'true'

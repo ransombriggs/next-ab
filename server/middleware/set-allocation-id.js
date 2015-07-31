@@ -51,8 +51,9 @@ var getAllocationID = function(req, res){
 		return Promise.resolve(deviceID);
 	}
 
-	// If neither uuid, session nor deviceID were provided, but
-	// an isAnonymous header was, what does that mean?
+	// If neither uuid, session nor deviceID were provided, but an isAnonymous header
+	// was, what does that mean? In any case, fail to a random generated uuid.
+	// This'll be cached if the CDN caches the allocationID.
 	if (isAnonymous) {
 		return Promise.resolve(nodeUuid());
 	}
