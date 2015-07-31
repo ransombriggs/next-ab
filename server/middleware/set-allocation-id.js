@@ -12,7 +12,7 @@ var getAllocationID = function(req, res){
 	// See: http://git.svc.ft.com/projects/NEXT/repos/preflight-requests/browse/src/tasks/session.js
 	var sessionFailure = req.get('ft-preflight-session-failure') || req.get('x-ft-preflight-session-failure');
 	var uuid = req.get('ft-user-id') || req.get('x-ft-user-id');
-	var session = req.get('ft-session-token') || req.get('x-ft-session-token');
+	var sessionToken = req.get('ft-session-token') || req.get('x-ft-session-token');
 	var deviceID = req.get('ft-device-id') || req.get('x-ft-device-id');
 	var isAnonymous = req.get('ft-anonymous-user') || req.get('x-ft-anonymous-user');
 
@@ -27,17 +27,21 @@ var getAllocationID = function(req, res){
 	}
 
 	// If uuid is not provided, attempt to load it via the session api.
-	if (session) {
-		delete req.headers['host'];
+	if (sessionToken) {
 		return fetch('https://session-next.ft.com/uuid', {
-			headers: req.headers
+			headers: {
+				'ft-session-token':sessionToken
+			}
 		})
-		.then(function(response){
-			if(response.ok){
-				var json = response.json();
-				if (json.uuid) {
-					return json.uuid;
-				}
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(json) {
+			if (json.uuid) {
+				return json.uuid;
+			}
+			else {
+				return Promise.reject('Recieved OK response from uuid server but uuid not returned');
 			}
 		});
 	}

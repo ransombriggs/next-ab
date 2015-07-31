@@ -5,6 +5,10 @@
 var app = require('../server/app');
 var expect = require('chai').expect;
 
+// Adam Braimbridge's session token
+// TODO: This will break once the session expires. Find a solution.
+var testSessionToken = 'z0Rby_ft20e007iG3BlHNKqHzwAAAU61sW50ww.MEUCIGnSw7x9WQCpxzWfynq6H50HhClh5qKWbDtvCQoGsrH4AiEAlCNGiRBY_QzAY4vgvyGxZlCuXEyp65MFmVHkKkmjo4U';
+
 var err = function (err) {
 	console.error(err, err.stack);
 };
@@ -63,10 +67,10 @@ describe('A/B allocation API', function () {
 
 	// Case: "ft-session-token" header is provided
 	// e.g. curl -H 'ft-session-token: ...' ft-next-ab.herokuapp.com/foo
-	it.skip('should return an x-ft-ab header based on a user\'s uuid derived from their session token', function (done) {
+	it('should return an x-ft-ab header based on a user\'s uuid derived from their session token', function (done) {
 		fetch('http://localhost:5101/foo', {
 			headers: {
-				'ft-session-token': 'abc-123'
+				'ft-session-token': testSessionToken
 			}
 		})
 		.then(function (res) {
