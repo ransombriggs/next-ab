@@ -1,9 +1,10 @@
+
 "use strict";
 
 // Set the AB tests array as an app variable.
-module.exports = function(req,res) {
+module.exports = function(req,res,next) {
 
-	app.set('abTests',[
+	res.app.set('abTests',[
 		{
 			name:'aa'
 		},

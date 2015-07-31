@@ -15,9 +15,18 @@ describe('A/B allocation API', function () {
 		app.listen.then(done.bind(this, undefined));
 	});
 
-	// Smoke test
+	// Smoke test: __gtg endpoint
 	it('should respond to a good-to-go end point', function (done) {
 		fetch('http://localhost:5101/__gtg')
+			.then(function (res) {
+				expect(res.status).to.equal(200);
+				done();
+			}).catch(err);
+	});
+
+	// Smoke test: __tests endpoint
+	it('should respond to a __tests end point', function (done) {
+		fetch('http://localhost:5101/__tests')
 			.then(function (res) {
 				expect(res.status).to.equal(200);
 				done();
