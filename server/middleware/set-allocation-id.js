@@ -10,27 +10,14 @@ var getAllocationID = function(req, res){
 	// A/B allocation is based on an allocation ID. Ideally the allocation ID is the
 	// user's uuid, but if the user is anonymous, it fails back to their device ID.
 	// See: http://git.svc.ft.com/projects/NEXT/repos/preflight-requests/browse/src/tasks/session.js
-	var sessionFailure = req.get('ft-preflight-session-failure') || req.get('x-ft-preflight-session-failure');
-	var uuid = req.get('ft-user-id') || req.get('x-ft-user-id');
 	var sessionToken = req.get('ft-session-token') || req.get('x-ft-session-token');
-	var deviceID = req.get('ft-device-id') || req.get('x-ft-device-id');
-	var isAnonymous = req.get('ft-anonymous-user') || req.get('x-ft-anonymous-user');
-
-	// If preflight could not validate the session, don't allocate A/B tests.
-	if (sessionFailure) {
-		return Promise.reject('Preflight session failure detected');
-	}
-
-	// Ideally, the allocation is based on the user's uuid.
-	if (uuid) {
-		return Promise.resolve(uuid);
-	}
+	var deviceID = req.get('ft-device-id');
 
 	// If uuid is not provided, attempt to load it via the session api.
 	if (sessionToken) {
 		return fetch('https://session-next.ft.com/uuid', {
 			headers: {
-				'ft-session-token':sessionToken
+				'ft-session-token': sessionToken
 			}
 		})
 		.then(function(response) {

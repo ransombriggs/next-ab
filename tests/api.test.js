@@ -3,6 +3,7 @@
 'use strict';
 
 var app = require('../server/app');
+var mitm = require('mitm');
 var expect = require('chai').expect;
 
 // Adam Braimbridge's session token
@@ -16,6 +17,10 @@ var err = function (err) {
 describe('A/B allocation API', function () {
 
 	beforeEach(function(done) {
+		this.mitm = mitm();
+		this.mitm.on('request', function(req, res) {
+			console.log('mocked request', req.url);
+		});
 		app.listen.then(done.bind(this, undefined));
 	});
 
@@ -43,7 +48,7 @@ describe('A/B allocation API', function () {
 
 	// Case: "ft-session-token" header is provided
 	// e.g. curl -H 'ft-session-token: ...' ft-next-ab.herokuapp.com/foo
-	it('should return an x-ft-ab header based on a user\'s uuid derived from their session token', function (done) {
+	it.only('should return an x-ft-ab header based on a user\'s uuid derived from their session token', function (done) {
 		fetch('http://localhost:5101/foo', {
 			headers: {
 				'ft-session-token': testSessionToken
