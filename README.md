@@ -49,21 +49,36 @@ this already.
 
 ## Creating an AB test 
 
-- As per usual, create a [feature
-  flag](http://github.com/Financial-Times/next-feature-flags-api), build
-  your feature, and release it.
-- Add the flag to the [current AB test list](models/tests.js), and release
-  this. At this point your AB test will be running. All data Next collects
-  about a user will be tagged with the test name and variant the user belongs
-  to.
-- Check the data is appearing in the real-time beacon API.
+As per usual, create a [feature
+flag](http://github.com/Financial-Times/next-feature-flags-api), build your
+feature.
 
-You can then export the data and analyse it. 
+Indicate the test is an AB test by setting the `abTestState` property to 'true', 
+
+	{
+		name: "streamHotTopics",
+		safeState: false,
+		expiry: new Date("2015-09-01T00:00:00.000Z"),
+		state: false,
+		abTestState: true,       <--- an AB test that is live
+		tags: ["apps:dobi"],
+		owner: 'chris.smith@ft.com'
+	}
+
+Release it. At this point your AB test will be running. All data Next collects
+about a user will be tagged with the test name and variant the user belongs to.
+
+Check the data is appearing in the real-time [beacon API](https://beacon.ft.com).
 
 ## Limitations and notes
 
-- The flag should be turned _off_ for the duration of the test.
-- Segmentation is currently random. Users are split 50/50 in to a _control_ and
-  a single _variant._
-- Each AB test is coupled to a feature flag. If the flag expires or changes name the AB
-  test will become invalid. If you need to do that then just restart the test.
+The `state` flag should be turned _off_ (or false) for the duration of the
+test. Segmentation works by flipping the flag _on_ for 50% of people, so having
+the flag on by default will just mean everyone will see the same variant.
+ 
+Segmentation is currently random. Users are split 50/50 in to a _control_ and a
+single _variant._
+
+Each AB test is coupled to a feature flag. If the flag expires or changes name
+the AB test will become invalid. If you need to do that then just restart the
+test.
