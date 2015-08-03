@@ -1,11 +1,9 @@
-/* global beforeEach, describe, it, console, xit */
+/* global beforeEach, describe, it, console */
 
 'use strict';
 
 var app = require('../server/app');
 var expect = require('chai').expect;
-
-var uuidv3 = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
 
 var err = function (err) {
 	console.error(err, err.stack);
@@ -36,7 +34,7 @@ describe('API', function () {
 				done();
 			}).catch(err);
 	});
-	
+
 	it('Should return an x-ft-ab header based on a user\'s device id', function (done) {
 		fetch('http://localhost:5101/foo', {
 			headers: {
