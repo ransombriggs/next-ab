@@ -3,7 +3,7 @@
 
 var seedrandom = require('seedrandom');
 
-// Given a list of AB tests and UUID the prng will consistently 
+// Given a list of AB tests and UUID the prng will consistently
 // but evenly distribute users in to A/B segments.
 module.exports = function(tests, uuid) {
 
@@ -20,10 +20,3 @@ module.exports = function(tests, uuid) {
 	return allocation.join(',');
 
 };
-
-/*	
-res.set('allocation-id', allocationID);
-res.set('x-ft-ab', allocationHeader);
-next();
-*/
-
