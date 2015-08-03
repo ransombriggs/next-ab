@@ -22,11 +22,7 @@ app.get('/__gtg', function(req, res) {
 app.use(setABTests);
 
 app.get('/__tests', function(req, res) {
-	res.json(res.app.get('abTests'));
-});
-
-app.get('/', function(req, res) {
-	res.redirect(302, 'https://github.com/financial-times/next-ab');
+	res.json(res.locals.abTests);
 });
 
 // Set the allocation ID as a local variable

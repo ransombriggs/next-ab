@@ -33,36 +33,12 @@ describe('A/B allocation API', function () {
 		fetch('http://localhost:5101/__tests')
 			.then(function (res) {
 				expect(res.status).to.equal(200);
+				return res.json();
+			})
+			.then(function (res) {
+				expect(res[0].name).to.equal('aa');
 				done();
 			}).catch(err);
-	});
-
-	// Case: "ft-session-api-fail" header is provided
-	// e.g. curl -H 'ft-session-api-fail: true' ft-next-ab.herokuapp.com/foo
-	it('should return a blank x-ft-ab header to requests that failed preflight session validation', function (done) {
-		return fetch('http://localhost:5101/foo', {
-			headers: {
-				'ft-preflight-session-failure': 'true' // FIXME: needs adding to CDN
-			}
-		})
-		.then(function (res) {
-			expect(res.headers.get('x-ft-ab')).to.equal('-');
-			done();
-		}).catch(err);
-	});
-
-	// Case: "ft-user-id" header is provided
-	// e.g. curl -H 'ft-user-id: ...' ft-next-ab.herokuapp.com/foo
-	it('should return an x-ft-ab header based on a user\'s uuid', function (done) {
-		fetch('http://localhost:5101/foo', {
-			headers: {
-				'ft-user-id': 'abc-123'
-			}
-		})
-		.then(function (res) {
-			expect(res.headers.get('x-ft-ab')).to.match(/aa:(on|off)/);
-			done();
-		}).catch(err);
 	});
 
 	// Case: "ft-session-token" header is provided
@@ -93,27 +69,27 @@ describe('A/B allocation API', function () {
 		}).catch(err);
 	});
 
-	// Case: "ft-anonymous-user" header is provided
-	// e.g. curl -H 'ft-anonymous-user: true' ft-next-ab.herokuapp.com/foo
-	it('should return an x-ft-ab header based on an anonymous user\'s (generated) device id', function (done) {
+	it('INVALID SESSION. should return an x-ft-ab header based on an anonymous user\'s (generated) device id', function (done) {
 		fetch('http://localhost:5101/foo', {
 			headers: {
-				'ft-anonymous-user': 'true'
+				'ft-session-token': 'this-is-an-invalid-session'
 			}
 		})
 		.then(function (res) {
-			expect(res.headers.get('x-ft-ab')).to.match(/aa:(on|off)/);
+			expect(res.headers.get('x-ft-ab')).to.equal('-');
 			done();
 		}).catch(err);
 	});
 
-	// Case: no header was provided
-	// e.g. curl ft-next-ab.herokuapp.com/foo
-	it('should return a blank x-ft-ab header to requests that provide no headers', function (done) {
-		fetch('http://localhost:5101/foo')
-			.then(function (res) {
-				expect(res.headers.get('x-ft-ab')).to.equal('-');
-				done();
-			}).catch(err);
+	it('NO SESSION. should return an x-ft-ab header based on an anonymous user\'s (generated) device id', function (done) {
+		fetch('http://localhost:5101/foo', {
+			headers: { }
+		})
+		.then(function (res) {
+			expect(res.headers.get('x-ft-ab')).to.match(/aa:(on|off)/);
+			expect(res.headers.get('x-device-id')).to.equal('....');
+			done();
+		}).catch(err);
 	});
+
 });
