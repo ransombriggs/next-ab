@@ -14,7 +14,7 @@ module.exports = function(req) {
 	var deviceId = req.get('ft-device-id');
 	var isAnonymous = !sessionToken && !deviceId;
 
-	console.log(sessionToken, deviceId, isAnonymous);
+	//console.log(sessionToken, deviceId, isAnonymous);
 
 	// If uuid is not provided, attempt to load it via the session api.
 	if (sessionToken) {

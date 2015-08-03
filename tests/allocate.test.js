@@ -9,7 +9,7 @@ var test_1 = { name: 'foo' };
 var test_2 = { name: 'boo' };
 var test_3 = { name: 'coo' };
 
-describe('Allocation', function () {
+describe('Allocate', function () {
 
 	it('Should not allocate users if there are defined tests', function () {
 		expect(allocate(undefined, 'd3fe0b06-9e43-11e3-b429-00144feab7de')).to.equal(false);

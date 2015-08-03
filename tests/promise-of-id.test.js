@@ -9,7 +9,7 @@ var sinon		= require('sinon');
 
 var uuidv3 = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
 
-describe('Allocation ID', function () {
+describe('Promise of ID', function () {
 
 	beforeEach(function() {
 		this.mitm = mitm();
