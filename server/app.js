@@ -22,7 +22,7 @@ app.get('/__gtg', function(req, res) {
 app.use(setABTests);
 
 app.get('/__tests', function(req, res) {
-	res.json(res.locals.abTests);
+	res.json(res.locals.tests);
 });
 
 // Set the allocation ID as a local variable

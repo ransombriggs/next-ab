@@ -43,7 +43,7 @@ describe('API', function () {
 		})
 		.then(function (res) {
 			expect(res.headers.get('x-ft-ab')).to.match(/aa:(on|off)/);
-			expect(res.headers.get('ft-allocation-id')).to.equal('abc-123');
+			expect(res.headers.get('ft-device-id')).to.equal('abc-123');
 			done();
 		}).catch(err);
 	});
@@ -56,7 +56,7 @@ describe('API', function () {
 		})
 		.then(function (res) {
 			expect(res.headers.get('x-ft-ab')).to.equal('-');
-			expect(res.headers.get('ft-allocation-id')).to.equal(null);
+			expect(res.headers.get('ft-device-id')).to.equal(null);
 			done();
 		}).catch(err);
 	});

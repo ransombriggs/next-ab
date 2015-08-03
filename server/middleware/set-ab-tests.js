@@ -9,6 +9,6 @@ module.exports = function(req, res, next) {
 		return flag.abTestState === true;
 	});
 
-	res.locals.abTests = flagsWithABTests;
+	res.locals.tests = flagsWithABTests;
 	next();
 };
