@@ -63,7 +63,7 @@ describe('Promise of ID', function () {
 	it('Should use device id when specified in the header', function (done) {
 
 		var get = sinon.stub();
-		get.withArgs('ft-device-id').returns('f5b634a6-e5c3-46a7-b6c8-129d8e0cd3ef');
+		get.withArgs('ft-allocation-id').returns('f5b634a6-e5c3-46a7-b6c8-129d8e0cd3ef');
 
 		var req = {
 			get: get

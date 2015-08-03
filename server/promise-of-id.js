@@ -11,10 +11,10 @@ module.exports = function(req) {
 	// user's uuid, but if the user is anonymous, it fails back to their device ID.
 	// See: http://git.svc.ft.com/projects/NEXT/repos/preflight-requests/browse/src/tasks/session.js
 	var sessionToken = req.get('ft-session-token') || req.get('x-ft-session-token');
-	var deviceId = req.get('ft-device-id');
-	var isAnonymous = !sessionToken && !deviceId;
+	var allocationId = req.get('ft-allocation-id');
+	var isAnonymous = !sessionToken && !allocationId;
 
-	//console.log(sessionToken, deviceId, isAnonymous);
+	//console.log(sessionToken, allocationId, isAnonymous);
 
 	// If uuid is not provided, attempt to load it via the session api.
 	if (sessionToken) {
@@ -36,8 +36,8 @@ module.exports = function(req) {
 	}
 
 	// If neither uuid nor session were provided, use the user's device ID.
-	if (deviceId) {
-		return Promise.resolve(deviceId);
+	if (allocationId) {
+		return Promise.resolve(allocationId);
 	}
 
 	// If neither uuid, session nor deviceID were provided, but an isAnonymous header
