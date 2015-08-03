@@ -1,31 +1,23 @@
-/* global beforeEach, describe, it, console */
+/* global beforeEach, describe, it, console, xit */
 
 'use strict';
 
 var app = require('../server/app');
-var mitm = require('mitm');
 var expect = require('chai').expect;
 
-// Adam Braimbridge's session token
-// TODO: This will break once the session expires. Find a solution.
-var testSessionToken = 'z0Rby_ft20e007iG3BlHNKqHzwAAAU61sW50ww.MEUCIGnSw7x9WQCpxzWfynq6H50HhClh5qKWbDtvCQoGsrH4AiEAlCNGiRBY_QzAY4vgvyGxZlCuXEyp65MFmVHkKkmjo4U';
+var uuidv3 = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
 
 var err = function (err) {
 	console.error(err, err.stack);
 };
 
-describe('A/B allocation API', function () {
+describe('API', function () {
 
 	beforeEach(function(done) {
-		this.mitm = mitm();
-		this.mitm.on('request', function(req, res) {
-			console.log('mocked request', req.url);
-		});
 		app.listen.then(done.bind(this, undefined));
 	});
 
-	// Smoke test: __gtg endpoint
-	it('should respond to a good-to-go end point', function (done) {
+	it('Should be good-to-go', function (done) {
 		fetch('http://localhost:5101/__gtg')
 			.then(function (res) {
 				expect(res.status).to.equal(200);
@@ -33,8 +25,7 @@ describe('A/B allocation API', function () {
 			}).catch(err);
 	});
 
-	// Smoke test: __tests endpoint
-	it('should respond to a __tests end point', function (done) {
+	it('Should display a list of active AB tests', function (done) {
 		fetch('http://localhost:5101/__tests')
 			.then(function (res) {
 				expect(res.status).to.equal(200);
@@ -45,24 +36,8 @@ describe('A/B allocation API', function () {
 				done();
 			}).catch(err);
 	});
-
-	// Case: "ft-session-token" header is provided
-	// e.g. curl -H 'ft-session-token: ...' ft-next-ab.herokuapp.com/foo
-	it.only('should return an x-ft-ab header based on a user\'s uuid derived from their session token', function (done) {
-		fetch('http://localhost:5101/foo', {
-			headers: {
-				'ft-session-token': testSessionToken
-			}
-		})
-		.then(function (res) {
-			expect(res.headers.get('x-ft-ab')).to.match(/aa:(on|off)/);
-			done();
-		}).catch(err);
-	});
-
-	// Case: "ft-device-id" header is provided
-	// e.g. curl -H 'ft-device-id: ...' ft-next-ab.herokuapp.com/foo
-	it('should return an x-ft-ab header based on a user\'s device id', function (done) {
+	
+	it('Should return an x-ft-ab header based on a user\'s device id', function (done) {
 		fetch('http://localhost:5101/foo', {
 			headers: {
 				'ft-device-id': 'abc-123'
@@ -70,11 +45,12 @@ describe('A/B allocation API', function () {
 		})
 		.then(function (res) {
 			expect(res.headers.get('x-ft-ab')).to.match(/aa:(on|off)/);
+			expect(res.headers.get('ft-allocation-id')).to.equal('abc-123');
 			done();
 		}).catch(err);
 	});
 
-	it('INVALID SESSION. should return an x-ft-ab header based on an anonymous user\'s (generated) device id', function (done) {
+	it('Invalid sessions should not be segmented', function (done) {
 		fetch('http://localhost:5101/foo', {
 			headers: {
 				'ft-session-token': 'this-is-an-invalid-session'
@@ -82,17 +58,7 @@ describe('A/B allocation API', function () {
 		})
 		.then(function (res) {
 			expect(res.headers.get('x-ft-ab')).to.equal('-');
-			done();
-		}).catch(err);
-	});
-
-	it('NO SESSION. should return an x-ft-ab header based on an anonymous user\'s (generated) device id', function (done) {
-		fetch('http://localhost:5101/foo', {
-			headers: { }
-		})
-		.then(function (res) {
-			expect(res.headers.get('x-ft-ab')).to.match(/aa:(on|off)/);
-			expect(res.headers.get('x-device-id')).to.equal('....');
+			expect(res.headers.get('ft-allocation-id')).to.equal(null);
 			done();
 		}).catch(err);
 	});
