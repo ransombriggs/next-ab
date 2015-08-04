@@ -10,6 +10,12 @@ var app = module.exports = express({
 	withHandlebars: false
 });
 
+app.use(function(req, res, next){
+	Metrics.instrument(res, { as: 'express.http.res' });
+	Metrics.instrument(req, { as: 'express.http.req' });
+	next();
+});
+
 app.get('/favicon.ico', function(req, res) {
 	res.status(404).end();
 });
@@ -32,6 +38,11 @@ app.use(setAllocationID);
 app.use(setAllocationHeader);
 
 app.get('/*', function(req, res) {
+
+	// Metrics: Who's asking for the allocation?
+	var interrogator = req.get('ft-interrogator') || 'unknown';
+	Metrics.count('interrogator.'+interrogator, 1);
+
 	res
 		.set('cache-control', 'private, no-cache, max-age=0')
 		.status(200)
