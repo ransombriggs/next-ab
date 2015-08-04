@@ -11,16 +11,17 @@ clean:
 	git clean -xfd
 
 run:
-	export PORT=5050; nodemon app.js
+	export PORT=5050; nodemon server/app.js
 
-test: build-production
+test:
 	nbt verify --skip-layout-checks
-	export HOSTEDGRAPHITE_APIKEY=1; export PORT=5050; mocha
+	export HOSTEDGRAPHITE_APIKEY=1; export PORT=5101; mocha ./tests
 
 build-production:
 	nbt about
 
 provision:
+	next-build-tools about
 	next-build-tools provision ${TEST_HOST}
 	next-build-tools configure ft-next-ab ${TEST_HOST} --overrides "NODE_ENV=branch" --no-splunk
 	next-build-tools deploy ${TEST_HOST} --skip-enable-preboot --docker

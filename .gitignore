@@ -2,3 +2,4 @@
 /node-*
 /tmp
 .env
+public
