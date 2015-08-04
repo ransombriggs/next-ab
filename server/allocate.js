@@ -1,8 +1,7 @@
 
 "use strict";
 
-var express = require('ft-next-express');
-var Metrics = express.metrics;
+var metrics = require('ft-next-express').metrics;
 var seedrandom = require('seedrandom');
 
 // Given a list of AB tests and UUID, the prng will consistently
@@ -18,7 +17,7 @@ module.exports = function(tests, uuid) {
 		var group = (rng() > 0.5) ? 'off' : 'on';
 
 		// Metrics: Track A/B allocation
-		Metrics.count('allocation.' + test.name + '.' + group, 1);
+		metrics.count('allocation.' + test.name + '.' + group, 1);
 
 		return test.name + ':' + group;
 	});

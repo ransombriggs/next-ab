@@ -5,15 +5,9 @@ var express = require('ft-next-express');
 var setAllocationID = require('./middleware/set-allocation-id');
 var setAllocationHeader = require('./middleware/set-allocation-header');
 var setABTests = require('./middleware/set-ab-tests');
-var Metrics = express.metrics;
+var metrics = express.metrics;
 var app = module.exports = express({
 	withHandlebars: false
-});
-
-app.use(function(req, res, next){
-	Metrics.instrument(res, { as: 'express.http.res' });
-	Metrics.instrument(req, { as: 'express.http.req' });
-	next();
 });
 
 app.get('/favicon.ico', function(req, res) {
@@ -40,8 +34,8 @@ app.use(setAllocationHeader);
 app.get('/*', function(req, res) {
 
 	// Metrics: Who's asking for the allocation?
-	var interrogator = req.get('ft-interrogator') || 'unknown';
-	Metrics.count('interrogator.'+interrogator, 1);
+	// FIXME - var interrogator = req.get('ft-interrogator') || 'unknown';
+	// metrics.count('interrogator.'+interrogator, 1);
 
 	res
 		.set('cache-control', 'private, no-cache, max-age=0')
@@ -51,5 +45,5 @@ app.get('/*', function(req, res) {
 
 module.exports.listen = app.listen(process.env.PORT, function() {
 	console.log("Listening on port", process.env.PORT);
-	Metrics.count('express.start');
+	metrics.count('express.start');
 });
