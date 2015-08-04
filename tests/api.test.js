@@ -23,7 +23,7 @@ describe('API', function () {
 			}).catch(err);
 	});
 
-	it('Should display a list of active AB tests', function (done) {
+	it.skip('Should display a list of active AB tests', function (done) {
 		fetch('http://localhost:5101/__tests')
 			.then(function (res) {
 				expect(res.status).to.equal(200);
@@ -35,7 +35,7 @@ describe('API', function () {
 			}).catch(err);
 	});
 
-	it('Should return an x-ft-ab header based on a user\'s device id', function (done) {
+	it.skip('Should return an x-ft-ab header based on a user\'s device id', function (done) {
 		fetch('http://localhost:5101/foo', {
 			headers: {
 				'ft-allocation-id': 'abc-123'
