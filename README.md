@@ -9,7 +9,7 @@ subsequent request.
 
 ## Use cases
 
-- The CDN can hit the API to segment each response in to buckets, allowing it
+- The CDN can hit the API to segment each response into buckets, allowing it
 to vary responses. 
 - An application (say, something that sends an email) can hit the API and use
 the response to send different users different content each day.

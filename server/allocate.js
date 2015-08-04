@@ -3,8 +3,8 @@
 
 var seedrandom = require('seedrandom');
 
-// Given a list of AB tests and UUID the prng will consistently
-// but evenly distribute users in to A/B segments.
+// Given a list of AB tests and UUID, the prng will consistently
+// but evenly allocate users into an A/B segment, per test.
 module.exports = function(tests, uuid) {
 
 	if (!uuid || !tests || tests.length === 0) {
