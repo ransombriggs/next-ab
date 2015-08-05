@@ -5,6 +5,7 @@
 var app		= require('../../server/app');
 var expect	= require('chai').expect;
 var util	= require('util');
+var debug	= require('debug')('ab');
 
 var err = function (err) {
 	console.error(err, err.stack);
@@ -12,10 +13,11 @@ var err = function (err) {
 
 var host = util.format('http://%s', process.env.TEST_APP || 'localhost:5101');
 
+debug('Running tests on host: %s', host);
+
 describe('API', function () {
 
 	beforeEach(function(done) {
-		console.log(host);
 		app.listen.then(done.bind(this, undefined));
 	});
 

@@ -20,7 +20,7 @@ test: unit-test
 	nbt verify --skip-layout-checks
 
 smoke:
-	export HOSTEDGRAPHITE_APIKEY=1; mocha ./tests/smoke;
+	export DEBUG=ab; export HOSTEDGRAPHITE_APIKEY=1; mocha ./tests/smoke;
 
 build-production:
 	nbt about
@@ -37,6 +37,3 @@ tidy:
 deploy:
 	nbt configure --no-splunk
 	nbt deploy --docker
-
-	make -j2 visual smoke
-
