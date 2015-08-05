@@ -1,3 +1,5 @@
+.haikro-cache/
+Dockerfile
 /node_modules/
 /node-*
 /tmp
