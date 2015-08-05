@@ -2,7 +2,7 @@
 
 'use strict';
 
-var allocate = require('../server/allocate');
+var allocate = require('../../server/allocate');
 var expect = require('chai').expect;
 
 // Note: These are AB tests, not unit tests.

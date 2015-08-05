@@ -2,7 +2,7 @@
 
 'use strict';
 
-var promiseOfId	= require('../server/promise-of-id');
+var promiseOfId	= require('../../server/promise-of-id');
 var expect		= require('chai').expect;
 var mitm		= require('mitm');
 var sinon		= require('sinon');

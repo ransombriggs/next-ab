@@ -1,5 +1,5 @@
 GIT_HASH := $(shell git rev-parse --short HEAD)
-TEST_HOST := "ft-ab-branch-${GIT_HASH}"
+TEST_APP := "ft-ab-branch-${GIT_HASH}"
 
 .PHONY: test
 
@@ -13,9 +13,14 @@ clean:
 run:
 	export PORT=5050; nodemon server/app.js
 
-test:
+unit-test:
+	mocha ./tests/unit
+
+test: unit-test
 	nbt verify --skip-layout-checks
-	export HOSTEDGRAPHITE_APIKEY=1; export PORT=5101; mocha ./tests
+
+smoke:
+	export HOSTEDGRAPHITE_APIKEY=1; mocha ./tests/smoke;
 
 build-production:
 	nbt about
@@ -32,3 +37,6 @@ tidy:
 deploy:
 	nbt configure --no-splunk
 	nbt deploy --docker
+
+	make -j2 visual smoke
+
