@@ -7,7 +7,8 @@ var setAllocationHeader = require('./middleware/set-allocation-header');
 var setABTests = require('./middleware/set-ab-tests');
 var metrics = express.metrics;
 var app = module.exports = express({
-	withHandlebars: false
+	withHandlebars: false,
+	withBackendAuthentication: false
 });
 
 app.get('/favicon.ico', function(req, res) {
