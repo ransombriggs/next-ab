@@ -1,7 +1,8 @@
 
 'use strict';
 
-var nodeUuid	= require('node-uuid');
+var nodeUuid = require('node-uuid');
+var metrics = require('ft-next-express').metrics;
 
 module.exports = function(req) {
 
@@ -14,7 +15,17 @@ module.exports = function(req) {
 	var allocationId = req.get('ft-allocation-id');
 	var isAnonymous = !sessionToken && !allocationId;
 
-	//console.log(sessionToken, allocationId, isAnonymous);
+	if (sessionToken) {
+		metrics.count('id.has-session-token', 1);
+	}
+
+	if (allocationId) {
+		metrics.count('id.has-allocation-id', 1);
+	}
+
+	if (isAnonymous) {
+		metrics.count('id.is-anonymous', 1);
+	}
 
 	// If an ft-session-token is provided, attempt to load uuid via the session api.
 	if (sessionToken) {
