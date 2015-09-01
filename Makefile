@@ -25,6 +25,7 @@ provision:
 	nbt provision ${TEST_HOST}
 	nbt configure ft-next-ab ${TEST_HOST} --overrides "NODE_ENV=branch" --no-splunk
 	nbt deploy ${TEST_HOST} --skip-enable-preboot --docker
+	nbt test-urls ${TEST_HOST}
 
 tidy:
 	nbt destroy ${TEST_HOST}
