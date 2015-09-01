@@ -15,16 +15,16 @@ run:
 
 test:
 	nbt verify --skip-layout-checks
-	export HOSTEDGRAPHITE_APIKEY=1; export PORT=5101; mocha ./tests
+	export HOSTEDGRAPHITE_APIKEY=1; export PORT=5101; mocha ./test
 
 build-production:
 	nbt about
 
 provision:
-	next-build-tools about
-	next-build-tools provision ${TEST_HOST}
-	next-build-tools configure ft-next-ab ${TEST_HOST} --overrides "NODE_ENV=branch" --no-splunk
-	next-build-tools deploy ${TEST_HOST} --skip-enable-preboot --docker
+	nbt about
+	nbt provision ${TEST_HOST}
+	nbt configure ft-next-ab ${TEST_HOST} --overrides "NODE_ENV=branch" --no-splunk
+	nbt deploy ${TEST_HOST} --skip-enable-preboot --docker
 
 tidy:
 	nbt destroy ${TEST_HOST}
