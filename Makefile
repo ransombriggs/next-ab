@@ -24,7 +24,7 @@ provision:
 	nbt about
 	nbt provision ${TEST_HOST}
 	nbt configure ft-next-ab ${TEST_HOST} --overrides "NODE_ENV=branch" --no-splunk
-	nbt deploy ${TEST_HOST} --skip-enable-preboot --docker
+	nbt deploy ${TEST_HOST} --skip-enable-preboot
 	nbt test-urls ${TEST_HOST}
 
 tidy:
@@ -32,4 +32,4 @@ tidy:
 
 deploy:
 	nbt configure --no-splunk
-	nbt deploy --docker
+	nbt deploy
