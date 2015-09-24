@@ -20,7 +20,7 @@ app.get('/__gtg', function(req, res) {
 	res.status(200).send('OK');
 });
 
-app.use(cookieParser);
+app.use(cookieParser());
 
 // Set the A/B tests array as a local variable
 app.use(setABTests);
