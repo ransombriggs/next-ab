@@ -9,6 +9,7 @@ var seedrandom = require('seedrandom');
 module.exports = function(tests, uuid) {
 
 	if (!uuid || !tests || tests.length === 0) {
+		metrics.count('allocation.failed', 1);
 		return false;
 	}
 
