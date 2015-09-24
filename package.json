@@ -2,6 +2,7 @@
   "name": "ft-next-ab",
   "private": true,
   "dependencies": {
+    "cookie-parser": "^1.4.0",
     "debug": "^2.1.2",
     "forever": "^0.14.0",
     "ft-next-express": "^14.0.0",

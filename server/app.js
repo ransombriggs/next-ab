@@ -2,6 +2,7 @@
 "use strict";
 
 var express = require('ft-next-express');
+var cookieParser = require('cookie-parser');
 var setAllocationID = require('./middleware/set-allocation-id');
 var setAllocationHeader = require('./middleware/set-allocation-header');
 var setABTests = require('./middleware/set-ab-tests');
@@ -18,6 +19,8 @@ app.get('/favicon.ico', function(req, res) {
 app.get('/__gtg', function(req, res) {
 	res.status(200).send('OK');
 });
+
+app.use(cookieParser);
 
 // Set the A/B tests array as a local variable
 app.use(setABTests);
