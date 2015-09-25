@@ -56,5 +56,6 @@ module.exports = function(req) {
 		return Promise.resolve(nodeUuid());
 	}
 
+	metrics.count('id.no-allocation-id', 1);
 	return Promise.reject("Could not set allocation ID");
 };
