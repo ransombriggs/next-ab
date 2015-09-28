@@ -8,8 +8,13 @@ var seedrandom = require('seedrandom');
 // but evenly allocate users into an A/B segment, per test.
 module.exports = function(tests, uuid) {
 
-	if (!uuid || !tests || tests.length === 0) {
-		metrics.count('allocation.failed', 1);
+	if (!uuid) {
+		metrics.count('allocation.failed.uuid', 1);
+		return false;
+	}
+
+	if (!tests || tests.length === 0) {
+		metrics.count('allocation.failed.tests', 1);
 		return false;
 	}
 
