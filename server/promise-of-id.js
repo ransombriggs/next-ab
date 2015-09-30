@@ -15,16 +15,21 @@ module.exports = function(req) {
 	var allocationId = req.get('ft-allocation-id');
 	var isAnonymous = !sessionToken && !allocationId;
 
-	if (sessionToken) {
-		metrics.count('id.has-session-token', 1);
-	}
-
 	if (allocationId) {
 		metrics.count('id.has-allocation-id', 1);
 	}
 
+	if (sessionToken) {
+		metrics.count('id.has-session-token', 1);
+	}
+
 	if (isAnonymous) {
 		metrics.count('id.is-anonymous', 1);
+	}
+
+	// If an allocation ID is provided, use that.
+	if (allocationId) {
+		return Promise.resolve(allocationId);
 	}
 
 	// If an ft-session-token is provided, attempt to load uuid via the session api.
@@ -43,11 +48,6 @@ module.exports = function(req) {
 		.then(function(json) {
 			return json.uuid;
 		});
-	}
-
-	// If an allocation ID is provided, use that.
-	if (allocationId) {
-		return Promise.resolve(allocationId);
 	}
 
 	// If neither ft-session-token nor allocation ID were provided,

@@ -49,8 +49,11 @@ describe('Promise of ID', function () {
 			res.end();
 		});
 
+		var get = sinon.stub();
+		get.withArgs('ft-session-token').returns('z3MN_fJbrEOi07YfudMM2Trlzw');
+
 		var req = {
-			get: sinon.stub().returns('z3MN_fJbrEOi07YfudMM2Trlzw')
+			get: get
 		};
 
 		promiseOfId(req)
