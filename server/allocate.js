@@ -6,20 +6,22 @@ var seedrandom = require('seedrandom');
 
 // Given a list of AB tests and UUID, the prng will consistently
 // but evenly allocate users into an A/B segment, per test.
-module.exports = function(tests, uuid) {
+module.exports = function(tests, user) {
 
-	if (!uuid) {
+	if (!user || !user.uuid) {
 		metrics.count('allocation.failed.uuid', 1);
 		return false;
 	}
 
-	if (!tests || tests.length === 0) {
+	if (!tests || tests.flagsWithABTests.length === 0) {
 		metrics.count('allocation.failed.tests', 1);
 		return false;
 	}
 
-	var allocation = tests.map(function (test) {
-		var rng = seedrandom(uuid + test.name);
+	var allocatedTests = user.isSubscriber ? tests.subscriberTests : tests.anonymousTests;
+
+	var allocation = allocatedTests.map(function (test) {
+		var rng = seedrandom(user.uuid + test.name);
 		var group = (rng() > 0.5) ? 'off' : 'on';
 
 		// Metrics: Track A/B allocation

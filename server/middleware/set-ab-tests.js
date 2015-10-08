@@ -11,8 +11,20 @@ module.exports = function(req, res, next) {
 		return flag.abTestState === true;
 	});
 
+	var anonymousTests = flagsWithABTests.filter(function (flag) {
+		// Group flags for anon users. Flags without a cohort are assumed to be
+		// for all users
+		return flag.cohort === 'anonymous' || flag.cohort === 'all' || !flag.cohort;
+	});
+
+	var subscriberTests = flagsWithABTests.filter(function (flag) {
+		// Group flags for subscribers. Flags without a cohort are assumed to be
+		// for all users
+		return flag.cohort === 'subscriber' || flag.cohort === 'all' || !flag.cohort;
+	});
+
 	metrics.count('tests.active', flagsWithABTests.length);
 
-	res.locals.tests = flagsWithABTests;
+	res.locals.tests = {flagsWithABTests, anonymousTests, subscriberTests};
 	next();
 };

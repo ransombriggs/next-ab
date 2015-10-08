@@ -3,9 +3,9 @@
 'use strict';
 
 var promiseOfId	= require('../server/promise-of-id');
-var expect		= require('chai').expect;
-var mitm		= require('mitm');
-var sinon		= require('sinon');
+var expect = require('chai').expect;
+var mitm = require('mitm');
+var sinon = require('sinon');
 
 var uuidv3 = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
 
@@ -36,8 +36,8 @@ describe('Promise of ID', function () {
 		};
 
 		promiseOfId(req)
-			.then(function (uuid) {
-				expect(uuid).to.equal('de305d54-75b4-431b-adb2-eb6b9e546014');
+			.then(function (user) {
+				expect(user.uuid).to.equal('de305d54-75b4-431b-adb2-eb6b9e546014');
 				done();
 			});
 	});
@@ -70,8 +70,8 @@ describe('Promise of ID', function () {
 		};
 
 		promiseOfId(req)
-			.then(function (uuid) {
-				expect(uuid).to.equal('f5b634a6-e5c3-46a7-b6c8-129d8e0cd3ef');
+			.then(function (user) {
+				expect(user.uuid).to.equal('f5b634a6-e5c3-46a7-b6c8-129d8e0cd3ef');
 				done();
 			});
 
@@ -84,8 +84,8 @@ describe('Promise of ID', function () {
 		};
 
 		promiseOfId(req)
-			.then(function (uuid) {
-				expect(uuid).to.match(uuidv3);
+			.then(function (user) {
+				expect(user.uuid).to.match(uuidv3);
 				done();
 			});
 	});

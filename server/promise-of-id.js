@@ -41,19 +41,28 @@ module.exports = function(req) {
 			return response.json();
 		})
 		.then(function(json) {
-			return json.uuid;
+			return {
+				uuid : json.uuid,
+				isSubscriber: true
+			};
 		});
 	}
 
 	// If an allocation ID is provided, use that.
 	if (allocationId) {
-		return Promise.resolve(allocationId);
+		return Promise.resolve({
+			uuid : allocationId,
+			isSubscriber : false
+		});
 	}
 
 	// If neither ft-session-token nor allocation ID were provided,
 	// use a random-generated uuid.
 	if (isAnonymous) {
-		return Promise.resolve(nodeUuid());
+		return Promise.resolve({
+			uuid : nodeUuid(),
+			isSubscriber : false
+		});
 	}
 
 	metrics.count('id.no-allocation-id', 1);

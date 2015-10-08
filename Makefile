@@ -15,7 +15,7 @@ run:
 
 test:
 	nbt verify --skip-layout-checks
-	export HOSTEDGRAPHITE_APIKEY=1; export PORT=5101; mocha ./test
+	export HOSTEDGRAPHITE_APIKEY=1; export PORT=5101; mocha --recursive ./test
 
 build-production:
 	nbt about

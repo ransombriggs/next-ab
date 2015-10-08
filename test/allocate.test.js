@@ -9,28 +9,57 @@ var expect = require('chai').expect;
 var test_1 = { name: 'foo' };
 var test_2 = { name: 'boo' };
 var test_3 = { name: 'coo' };
+var test_4 = { name: 'ANONonly' };
+var test_5 = { name: 'SUBonly' };
+
+var user = {uuid: 'd3fe0b06-9e43-11e3-b429-00144feab7de'};
 
 describe('Allocate', function () {
 
 	it('Should not allocate users if there are no defined tests', function () {
-		expect(allocate(undefined, 'd3fe0b06-9e43-11e3-b429-00144feab7de')).to.equal(false);
+		expect(allocate(undefined, user)).to.equal(false);
 	});
 
 	it('Should not allocate users if there are no active tests', function () {
-		expect(allocate([], 'd3fe0b06-9e43-11e3-b429-00144feab7de')).to.equal(false);
+		expect(allocate({flagsWithABTests: []}, user)).to.equal(false);
 	});
 
 	it('Should not allocate users if the allocation id is not defined', function () {
-		expect(allocate([test_1, test_2], undefined)).to.equal(false);
+		expect(allocate({
+			flagsWithABTests: [test_1, test_2],
+			anonymousTests: [test_1, test_2]
+		}, undefined)).to.equal(false);
 	});
 
 	it('Should allocate a user to a single test', function () {
-		expect(allocate([test_1], 'd3fe0b06-9e43-11e3-b429-00144feab7de')).to.deep.equal('foo:off');
+		expect(allocate({
+			flagsWithABTests: [test_1],
+			anonymousTests: [test_1]
+		}, user)).to.deep.equal('foo:off');
 	});
 
 	it('Should allocate a user to multiple tests', function () {
-		expect(allocate([test_1, test_2, test_3], 'n3fe0b06-9e43-11e3-b429-00144feab7de')).to.deep.equal('foo:on,boo:off,coo:off');
-		expect(allocate([test_1, test_2], 'a3fe0b06-9e43-11e3-b429-00144feab7de')).to.deep.equal('foo:on,boo:on');
+		expect(allocate({
+			flagsWithABTests: [test_1, test_2, test_3],
+			anonymousTests: [test_1, test_2, test_3]
+		}, {uuid: 'n3fe0b06-9e43-11e3-b429-00144feab7de'})).to.deep.equal('foo:on,boo:off,coo:off');
+		expect(allocate({
+			flagsWithABTests: [test_1, test_2],
+			anonymousTests: [test_1, test_2]
+		}, {uuid: 'a3fe0b06-9e43-11e3-b429-00144feab7de'})).to.deep.equal('foo:on,boo:on');
 	});
-
+	it('should only allocate an anonymous user to the anonymous tests', function() {
+		expect(allocate({
+			flagsWithABTests: [test_1, test_2, test_4, test_5],
+			anonymousTests: [test_1, test_4],
+			subscriberTests: [test_2, test_5]
+		}, {uuid: 'n3fe0b06-9e43-11e3-b429-00144feab7de'})).to.deep.equal('foo:on,ANONonly:off');
+	});
+	it('should only allocate a subscriber to the subscriber tests', function() {
+		expect(allocate({
+			flagsWithABTests: [test_1, test_2, test_4, test_5],
+			anonymousTests: [test_1, test_4],
+			subscriberTests: [test_2, test_5]
+		}, {uuid: 'n3fe0b06-9e43-11e3-b429-00144feab7de', isSubscriber: true})).to.deep.equal('boo:off,SUBonly:off');
+	});
 });
