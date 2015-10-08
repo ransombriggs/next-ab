@@ -2,10 +2,10 @@
 
 'use strict';
 
-var app = require('../server/app');
-var expect = require('chai').expect;
+const app = require('../server/app');
+const expect = require('chai').expect;
 
-var err = function (err) {
+const err = function (err) {
 	console.error(err, err.stack);
 };
 

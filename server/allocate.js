@@ -1,8 +1,7 @@
+'use strict';
 
-"use strict";
-
-var metrics = require('ft-next-express').metrics;
-var seedrandom = require('seedrandom');
+const metrics = require('ft-next-express').metrics;
+const seedrandom = require('seedrandom');
 
 // Given a list of AB tests and UUID, the prng will consistently
 // but evenly allocate users into an A/B segment, per test.
@@ -18,11 +17,11 @@ module.exports = function(tests, user) {
 		return false;
 	}
 
-	var allocatedTests = user.isSubscriber ? tests.subscriberTests : tests.anonymousTests;
+	const allocatedTests = user.isSubscriber ? tests.subscriberTests : tests.anonymousTests;
 
-	var allocation = allocatedTests.map(function (test) {
-		var rng = seedrandom(user.uuid + test.name);
-		var group = (rng() > 0.5) ? 'off' : 'on';
+	const allocation = allocatedTests.map(function (test) {
+		let rng = seedrandom(user.uuid + test.name);
+		let group = (rng() > 0.5) ? 'off' : 'on';
 
 		// Metrics: Track A/B allocation
 		metrics.count('allocation.' + test.name + '.' + group, 1);

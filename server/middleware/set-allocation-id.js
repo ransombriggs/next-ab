@@ -1,8 +1,8 @@
 
-"use strict";
+'use strict';
 
 // Set the allocation ID as a local variable.
-var getAllocationID = require('../promise-of-id');
+const getAllocationID = require('../promise-of-id');
 
 module.exports = function(req, res, next){
 	getAllocationID(req, res)

@@ -2,17 +2,17 @@
 
 'use strict';
 
-var allocate = require('../server/allocate');
-var expect = require('chai').expect;
+const allocate = require('../server/allocate');
+const expect = require('chai').expect;
 
 // Note: These are AB tests, not unit tests.
-var test_1 = { name: 'foo' };
-var test_2 = { name: 'boo' };
-var test_3 = { name: 'coo' };
-var test_4 = { name: 'ANONonly' };
-var test_5 = { name: 'SUBonly' };
+const test_1 = { name: 'foo' };
+const test_2 = { name: 'boo' };
+const test_3 = { name: 'coo' };
+const test_4 = { name: 'ANONonly' };
+const test_5 = { name: 'SUBonly' };
 
-var user = {uuid: 'd3fe0b06-9e43-11e3-b429-00144feab7de'};
+const user = {uuid: 'd3fe0b06-9e43-11e3-b429-00144feab7de'};
 
 describe('Allocate', function () {
 

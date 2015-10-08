@@ -1,12 +1,12 @@
 /*jshint node:true*/
-"use strict";
+'use strict';
 
-var express = require('ft-next-express');
-var setAllocationID = require('./middleware/set-allocation-id');
-var setAllocationHeader = require('./middleware/set-allocation-header');
-var setABTests = require('./middleware/set-ab-tests');
-var metrics = express.metrics;
-var app = module.exports = express({
+const express = require('ft-next-express');
+const setAllocationID = require('./middleware/set-allocation-id');
+const setAllocationHeader = require('./middleware/set-allocation-header');
+const setABTests = require('./middleware/set-ab-tests');
+const metrics = express.metrics;
+const app = module.exports = express({
 	withHandlebars: false,
 	withBackendAuthentication: false
 });
@@ -45,6 +45,6 @@ app.get('/*', function(req, res) {
 });
 
 module.exports.listen = app.listen(process.env.PORT, function() {
-	console.log("Listening on port", process.env.PORT);
+	console.log('Listening on port', process.env.PORT);
 	metrics.count('express.start');
 });

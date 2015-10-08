@@ -1,8 +1,5 @@
-
-'use strict';
-
-var nodeUuid = require('node-uuid');
-var metrics = require('ft-next-express').metrics;
+const nodeUuid = require('node-uuid');
+const metrics = require('ft-next-express').metrics;
 
 module.exports = function(req) {
 
@@ -11,9 +8,9 @@ module.exports = function(req) {
 	// user's uuid, which is detected if given an FT session token.
 	// If the user is anonymous, an allocation ID is generate and returned.
 	// See: http://git.svc.ft.com/projects/NEXT/repos/preflight-requests/browse/src/tasks/session.js
-	var sessionToken = req.get('ft-session-token') || req.get('x-ft-session-token');
-	var allocationId = req.get('ft-allocation-id');
-	var isAnonymous = !sessionToken && !allocationId;
+	const sessionToken = req.get('ft-session-token') || req.get('x-ft-session-token');
+	const allocationId = req.get('ft-allocation-id');
+	const isAnonymous = !sessionToken && !allocationId;
 
 	if (sessionToken) {
 		metrics.count('id.has-session-token', 1);
@@ -66,5 +63,5 @@ module.exports = function(req) {
 	}
 
 	metrics.count('id.no-allocation-id', 1);
-	return Promise.reject("Could not set allocation ID");
+	return Promise.reject('Could not set allocation ID');
 };
