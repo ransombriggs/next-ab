@@ -4,7 +4,6 @@ TEST_HOST := "ft-ab-branch-${GIT_HASH}"
 .PHONY: test
 
 install:
-	npm install origami-build-tools
 	origami-build-tools install
 
 clean:
