@@ -21,7 +21,9 @@ const res = {
 			],
 			'expiry': '2030-01-01T00:00:00.000Z',
 			'abTestState': true,
-			'cohort': 'anonymous'
+			'cohorts': [
+				'anonymous'
+			]
 		},
 		{
 			'name': 'aaSUB',
@@ -36,7 +38,9 @@ const res = {
 			],
 			'expiry': '2030-01-01T00:00:00.000Z',
 			'abTestState': true,
-			'cohort': 'subscriber'
+			'cohorts': [
+				'subscriber'
+			]
 		},
 		{
 			'name': 'aaBOTH',
@@ -51,7 +55,10 @@ const res = {
 			],
 			'expiry': '2030-01-01T00:00:00.000Z',
 			'abTestState': true,
-			'cohort': 'all'
+			'cohorts': [
+				'subscriber',
+				'anonymous'
+			]
 		},
 		{
 			'name': 'aa',
@@ -65,6 +72,7 @@ const res = {
 				'next-ab'
 			],
 			'expiry': '2030-01-01T00:00:00.000Z',
+			'cohorts': [],
 			'abTestState': true
 		},
 		{
@@ -100,13 +108,13 @@ describe('Set AB tests middleware', function() {
 	it('should pass all anonymous test flags', function() {
 		setAB(req, res, function() {
 			let flagNames = getFlagNames(res.locals.tests.anonymousTests);
-			expect(flagNames).deep.equal(['aaANON', 'aaBOTH', 'aa']);
+			expect(flagNames).deep.equal(['aaANON', 'aaBOTH']);
 		});
 	});
 	it('should pass all subscriber test flags', function() {
 		setAB(req, res, function() {
 			let flagNames = getFlagNames(res.locals.tests.subscriberTests);
-			expect(flagNames).deep.equal(['aaSUB', 'aaBOTH', 'aa']);
+			expect(flagNames).deep.equal(['aaSUB', 'aaBOTH']);
 		});
 	});
 });

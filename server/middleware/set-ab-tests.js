@@ -10,18 +10,18 @@ module.exports = function(req, res, next) {
 	});
 
 	const anonymousTests = flagsWithABTests.filter(function (flag) {
-		// Group flags for anon users. Flags without a cohort are assumed to be
-		// for all users
-		return flag.cohort === 'anonymous' || flag.cohort === 'all' || !flag.cohort;
+		// Group flags for anon users.
+		return flag.cohorts && flag.cohorts.indexOf('anonymous') > -1;
 	});
 
 	const subscriberTests = flagsWithABTests.filter(function (flag) {
-		// Group flags for subscribers. Flags without a cohort are assumed to be
-		// for all users
-		return flag.cohort === 'subscriber' || flag.cohort === 'all' || !flag.cohort;
+		// Group flags for subscribers.
+		return flag.cohorts && flag.cohorts.indexOf('subscriber') > -1;
 	});
 
-	metrics.count('tests.active', flagsWithABTests.length);
+	metrics.count('tests.all.active', flagsWithABTests.length);
+	metrics.count('tests.anonymous.active', anonymousTests.length);
+	metrics.count('tests.subscriber.active', subscriberTests.length);
 
 	res.locals.tests = {flagsWithABTests, anonymousTests, subscriberTests};
 	next();
