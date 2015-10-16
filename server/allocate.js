@@ -19,7 +19,17 @@ module.exports = function(tests, user) {
 
 	const allocatedTests = user.isSubscriber ? tests.subscriberTests : tests.anonymousTests;
 
-	const allocation = allocatedTests.map(function (test) {
+	const userRng = seedrandom(user.uuid);
+	const userRange = userRng() * 100;
+	console.log(user.uuid, userRange);
+
+	const testsInRange = allocatedTests.filter(function(test) {
+		if (!test.abTestSetup) return false;
+		// Check user range is in test range
+		return test.abTestSetup.offset < userRange && userRange < (test.abTestSetup.offset + test.abTestSetup.range);
+	});
+
+	const allocation = testsInRange.map(function (test) {
 		let rng = seedrandom(user.uuid + test.name);
 		let group = (rng() > 0.5) ? 'off' : 'on';
 
