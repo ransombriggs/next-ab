@@ -21,7 +21,6 @@ module.exports = function(tests, user) {
 
 	const userRng = seedrandom(user.uuid);
 	const userRange = userRng() * 100;
-	console.log(user.uuid, userRange);
 
 	const testsInRange = allocatedTests.filter(function(test) {
 		if (!test.abTestSetup) return false;
