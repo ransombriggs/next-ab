@@ -11,8 +11,9 @@ const test_2 = { name: 'boo', abTestSetup: {offset:0, range: 100} };
 const test_3 = { name: 'coo', abTestSetup: {offset:0, range: 100} };
 const test_4 = { name: 'ANONonly', abTestSetup: {offset:0, range: 100} };
 const test_5 = { name: 'SUBonly', abTestSetup: {offset:0, range: 100} };
-const test_6 = { name: 'InRange', abTestSetup: {offset:90, range: 10} };
-const test_7 = { name: 'OutOfRange', abTestSetup: {offset:10, range: 30} };
+const test_6 = { name: 'InRangeA', abTestSetup: {offset:90, range: 10} };
+const test_7 = { name: 'InRangeB', abTestSetup: {offset:10, range: 30} };
+const test_8 = { name: 'BadRange', abTestSetup: {offset:0, range: 110} };
 
 const user = {uuid: 'd3fe0b06-9e43-11e3-b429-00144feab7de'};
 
@@ -71,11 +72,18 @@ describe('Allocate', function () {
 		expect(allocate({
 			flagsWithABTests: [test_6, test_7],
 			anonymousTests: [test_6, test_7]
-		}, user)).to.deep.equal('InRange:on');
+		}, user)).to.deep.equal('InRangeA:off');
 
 		expect(allocate({
 			flagsWithABTests: [test_6, test_7],
 			anonymousTests: [test_6, test_7]
-		}, {uuid: 'a3fe0b06-9e43-11e3-b429-00144feab7de'})).to.deep.equal('OutOfRange:on');
+		}, {uuid: 'a3fe0b06-9e43-11e3-b429-00144feab7de'})).to.deep.equal('InRangeB:off');
+	});
+
+	it('Should not allocate tests with bad ranges', function () {
+		expect(allocate({
+			flagsWithABTests: [test_8],
+			anonymousTests: [test_8]
+		}, user)).to.equal('');
 	});
 });

@@ -24,6 +24,8 @@ module.exports = function(tests, user) {
 
 	const testsInRange = allocatedTests.filter(function(test) {
 		if (!test.abTestSetup) return false;
+		return test.abTestSetup.offset + test.abTestSetup.range < 101;
+	}).filter(function(test) {
 		// Check user range is in test range
 		return test.abTestSetup.offset < userRange && userRange < (test.abTestSetup.offset + test.abTestSetup.range);
 	});
