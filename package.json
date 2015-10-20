@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "debug": "^2.1.2",
+    "fetchres": "^1.5.1",
     "forever": "^0.14.0",
     "ft-next-express": "^14.0.0",
     "node-uuid": "^1.4.3",

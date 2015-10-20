@@ -8,7 +8,10 @@ const setABTests = require('./middleware/set-ab-tests');
 const metrics = express.metrics;
 const app = module.exports = express({
 	withHandlebars: false,
-	withBackendAuthentication: false
+	withBackendAuthentication: false,
+	healthChecks:[
+		require('./health')
+	]
 });
 
 app.get('/favicon.ico', function(req, res) {
