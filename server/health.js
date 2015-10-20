@@ -19,7 +19,7 @@ function checkFlagSegmentation() {
 					return f;
 				})
 				// each of these requests gets the last 10 minutes' segmentation data for a given test
-				.map(f => fetch(`https://www.hostedgraphite.com/bbaf3ccf/${process.env.HOSTED_GRAPHITE_READ_KEY}/graphite/render/?_salt=1445269005.584&from=-10minutes&target=divideSeries(summarize(heroku.ab.web_1.allocation.${f.name}.on%2C%2210min%22)%2Csummarize(sumSeries(heroku.ab.web_1.allocation.${f.name}.*)%2C%2210min%22))&format=json`)
+				.map(f => fetch(`https://www.hostedgraphite.com/bbaf3ccf/${process.env.HOSTED_GRAPHITE_READ_KEY}/graphite/render/?_salt=1445269005.584&from=-10minutes&target=divideSeries(summarize(heroku.ab.*.allocation.${f.name}.on%2C%2210min%22)%2Csummarize(sumSeries(heroku.ab.*.allocation.${f.name}.*)%2C%2210min%22))&format=json`)
 										.then(fetchres.json)
 										.then(data => {
 											return {
