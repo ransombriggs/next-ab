@@ -6,30 +6,26 @@ var panicGuide = 'Don\'t panic';
 var lastCheckTime;
 
 const fetchres = require('fetchres');
-
+const urlBase = `https://www.hostedgraphite.com/bbaf3ccf/${process.env.HOSTEDGRAPHITE_READ_APIKEY}/graphite/render/?_salt=1445269005.584&from=-10minutes&format=json&target=`;
 function checkFlagSegmentation() {
 
 	fetch('http://next-flags.ft.com/')
 		.then(fetchres.json)
 		.then(flags => {
 			return Promise.all(flags
-				.filter(f => f.hasOwnProperty('abTestState'))
-				.map(f => {
-					console.log(f.name)
-					return f;
-				})
+				.filter(f => f.abTestState)
 				// each of these requests gets the last 10 minutes' segmentation data for a given test
-				.map(f => fetch(`https://www.hostedgraphite.com/bbaf3ccf/${process.env.HOSTEDGRAPHITE_READ_APIKEY}/graphite/render/?_salt=1445269005.584&from=-10minutes&target=divideSeries(summarize(sumSeries(heroku.ab.*.allocation.${f.name}.on)%2C%2210min%22)%2Csummarize(sumSeries(heroku.ab.*.allocation.${f.name}.*)%2C%2210min%22))&format=json`)
+
+				.map(f => fetch(`${urlBase}summarize(divideSeries(sumSeries(heroku.ab.*.allocation.${f.name}.on),sumSeries(heroku.ab.*.allocation.${f.name}.*)),"10min","sum",true))`)
 										.then(fetchres.json)
 										.then(data => {
 											return {
 												name: f.name,
-												split: data[0].datapoints[1]
+												split: data[0].datapoints[0]
 											};
 										})
 										.catch(() => false)
 				))
-
 		})
 		.then(tests => {
 			// We don't want the health check to fail if graphite is a bit flaky

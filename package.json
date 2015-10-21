@@ -6,6 +6,7 @@
     "fetchres": "^1.5.1",
     "forever": "^0.14.0",
     "ft-next-express": "^14.0.0",
+    "n-health": "^1.2.0",
     "node-uuid": "^1.4.3",
     "seedrandom": "^2.3.11"
   },

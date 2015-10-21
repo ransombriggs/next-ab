@@ -6,11 +6,23 @@ const setAllocationID = require('./middleware/set-allocation-id');
 const setAllocationHeader = require('./middleware/set-allocation-header');
 const setABTests = require('./middleware/set-ab-tests');
 const metrics = express.metrics;
+const nHealth = require('n-health');
 const app = module.exports = express({
 	withHandlebars: false,
 	withBackendAuthentication: false,
 	healthChecks:[
-		require('./health')
+		require('./health/segmentation'),
+		nHealth.runCheck({
+			type: 'graphiteSpike',
+			numerator: 'heroku.ab.*.express.default_route_GET.res.status.5**.count',
+			divisor: 'heroku.ab.*.express.default_route_GET.res.status.*.count',
+			threshold: 5,
+			name: '500 rate is acceptable',
+			severity: 3,
+			businessImpact: 'Significantly fewer users than normal will be allocated to AB testing segments',
+			technicalSummary: 'The proportion of requests responding with a 5xx status is at least 5 times higher than the baseline level',
+			panicGuide: 'asd'
+		})
 	]
 });
 
