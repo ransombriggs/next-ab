@@ -17,6 +17,8 @@ module.exports = function(tests, user) {
 		return false;
 	}
 
+	metrics.count('allocation.count', 1);
+
 	const allocatedTests = user.isSubscriber ? tests.subscriberTests : tests.anonymousTests;
 
 	const userRng = seedrandom(user.uuid);
