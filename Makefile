@@ -13,8 +13,8 @@ run:
 	export PORT=5050; nodemon server/app.js
 
 test:
-	nbt verify --skip-layout-checks
 	export HOSTEDGRAPHITE_APIKEY=1; export PORT=5101; mocha --recursive ./test
+	nbt verify --skip-layout-checks
 
 build-production:
 	nbt about
@@ -32,3 +32,15 @@ tidy:
 deploy:
 	nbt configure --no-splunk
 	nbt deploy
+
+deploy-fastly:
+	nbt deploy-vcl -e --service FASTLY_SERVICE_ID --vars SERVICEID --main main.vcl ./vcl/
+
+test-fastly:
+	export AMMIT_HOST='https://ammit.ft.com'; mocha ./test/api.test
+
+deploy-fastly-stage:
+	nbt deploy-vcl -e --service FASTLY_STAGING_SERVICE_ID --vars SERVICEID --main main.vcl ./vcl/
+
+test-fastly-stage:
+	export AMMIT_HOST='https://ammit-staging.ft.com'; mocha ./test/api.test

@@ -34,6 +34,10 @@ app.get('/__gtg', function(req, res) {
 	res.status(200).send('OK');
 });
 
+app.get('/__docs', function(req, res) {
+	res.redirect(301, 'https://ft-next-ammit.herokuapp.com/');
+});
+
 // Set the A/B tests array as a local variable
 app.use(setABTests);
 
@@ -52,9 +56,9 @@ app.get('/*', function(req, res) {
 	// Metrics: Who's asking for the allocation?
 	// FIXME - var interrogator = req.get('ft-interrogator') || 'unknown';
 	// metrics.count('interrogator.'+interrogator, 1);
-
 	res
-		.set('cache-control', 'private, no-cache, max-age=0')
+		.set('Cache-Control', 'max-age=3600, public, stale-while-revalidate=3600, stale-if-error=86400')
+		.set('Outbound-Cache-Control', 'private, max-age=0, no-cache')
 		.status(200)
 		.send('OK');
 });
