@@ -37,10 +37,10 @@ deploy-fastly:
 	nbt deploy-vcl -e --service FASTLY_SERVICE_ID --vars SERVICEID --main main.vcl ./vcl/
 
 test-fastly:
-	export AMMIT_HOST='https://ammit.ft.com'; mocha ./test/api.test
+	export AMMIT_HOST='https://ammit.ft.com'; mocha ./test/cdn.test
 
 deploy-fastly-stage:
 	nbt deploy-vcl -e --service FASTLY_STAGING_SERVICE_ID --vars SERVICEID --main main.vcl ./vcl/
 
 test-fastly-stage:
-	export AMMIT_HOST='https://ammit-staging.ft.com'; mocha ./test/api.test
+	export AMMIT_HOST='https://ammit-staging.ft.com'; mocha ./test/cdn.test

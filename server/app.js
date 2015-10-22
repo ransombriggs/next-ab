@@ -59,6 +59,7 @@ app.get('/*', function(req, res) {
 	res
 		.set('Cache-Control', 'max-age=3600, public, stale-while-revalidate=3600, stale-if-error=86400')
 		.set('Outbound-Cache-Control', 'private, max-age=0, no-cache')
+		.set('Vary', 'ft-allocation-id, ft-session-token')
 		.status(200)
 		.send('OK');
 });
