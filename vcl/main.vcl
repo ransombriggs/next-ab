@@ -124,6 +124,8 @@ sub vcl_deliver {
 	if (resp.http.Outbound-Cache-Control) {
 		set resp.http.Cache-Control = resp.http.Outbound-Cache-Control;
 		unset resp.http.Outbound-Cache-Control;
+	} else if (resp.http.Cache-Control) {
+		# do nothing
 	} else {
 		set resp.http.Cache-Control = "no-cache, no-store, must-revalidate, max-age=0";
 	}
