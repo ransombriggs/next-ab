@@ -1,12 +1,13 @@
 'use strict';
 
-var lastCheckOk = false;
-var lastCheckOutput = 'Waiting for check';
-var panicGuide = 'Don\'t panic';
-var lastCheckTime;
+let lastCheckOk = false;
+let lastCheckOutput = 'Waiting for check';
+let panicGuide = 'Don\'t panic';
+let lastCheckTime;
 
 const fetchres = require('fetchres');
 const urlBase = `https://www.hostedgraphite.com/bbaf3ccf/${process.env.HOSTEDGRAPHITE_READ_APIKEY}/graphite/render/?_salt=1445269005.584&from=-10minutes&format=json&target=`;
+
 function checkFlagSegmentation() {
 
 	fetch('http://next-flags.ft.com/')

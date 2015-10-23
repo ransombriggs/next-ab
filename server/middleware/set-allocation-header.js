@@ -7,5 +7,10 @@ module.exports = function(req, res, next) {
 	if (allocation) {
 		res.set('ft-allocation-id', res.locals.user.uuid);
 	}
+
+	const sessionToken = req.get('ft-session-token') || req.get('x-ft-session-token');
+	if (sessionToken) {
+		res.set('ft-session-token', sessionToken);
+	}
 	next();
 };
