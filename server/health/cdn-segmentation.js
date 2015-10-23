@@ -16,8 +16,7 @@ function checkFlagSegmentation() {
 			return Promise.all(flags
 				.filter(f => f.abTestState)
 				// each of these requests gets the last 10 minutes' segmentation data for a given test
-
-				.map(f => fetch(`${urlBase}summarize(divideSeries(sumSeries(heroku.ab.*.allocation.${f.name}.on),sumSeries(heroku.ab.*.allocation.${f.name}.*)),"10min","sum",true))`)
+				.map(f => fetch(`${urlBase}summarize(divideSeries(sumSeries(heroku.preflight.*.ab.allocation.${f.name}.on),sumSeries(heroku.preflight.*.ab.allocation.${f.name}.*)),"10min","sum",true))`)
 										.then(fetchres.json)
 										.then(data => {
 											return {
@@ -61,7 +60,7 @@ setInterval(checkFlagSegmentation, 1000 * 60);
 module.exports = {
 	getStatus: () => {
 		return {
-			name: "Next AB service is segmenting traffic effectively",
+			name: "Next AB service cdn is segmenting traffic effectively",
 
 			ok: lastCheckOk,
 			checkOutput: lastCheckOutput,
@@ -70,7 +69,7 @@ module.exports = {
 
 			severity: 3,
 			businessImpact: "AB tests run on next will not be fair tests",
-			technicalSummary: "For each AB test looks at metrics sent to graphite to see if there is a reasonably even split of traffic (within 5 points of 50%)"
+			technicalSummary: "For each AB test looks at metrics sent to graphite from preflight to see if there is a reasonably even split of traffic (within 5 points of 50%)"
 		};
 	}
 };
