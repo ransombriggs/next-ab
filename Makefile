@@ -13,7 +13,7 @@ run:
 	export PORT=5050; nodemon server/app.js
 
 test:
-	export HOSTEDGRAPHITE_APIKEY=1; export PORT=5101; mocha --recursive ./test
+	export HOSTEDGRAPHITE_APIKEY=1; export PORT=5101; export SESSION_TOKEN=fake-token; mocha --recursive ./test
 	nbt verify --skip-layout-checks
 
 build-production:
