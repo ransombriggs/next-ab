@@ -12,6 +12,7 @@ const app = module.exports = express({
 	withBackendAuthentication: false,
 	healthChecks:[
 		require('./health/segmentation'),
+		require('./health/cdn-segmentation'),
 		nHealth.runCheck({
 			type: 'graphiteSpike',
 			numerator: 'heroku.ab.*.express.default_route_GET.res.status.5**.count',
