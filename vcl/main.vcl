@@ -30,11 +30,7 @@ sub vcl_recv {
 		error 801 "Force TLS";
 	}
 
-	if(req.http.Fastly-SSL){
-		set req.http.Protocol = "https://";
-	} else {
-		set req.http.Protocol = "http://";
-	}
+	set req.http.Protocol = "https://";
 
 	log {"syslog ${SERVICEID} ft-next-syslog-server :: "} {" event=AMMIT_REQUEST url="} req.url {" method="} req.request;
 
@@ -122,15 +118,12 @@ sub vcl_deliver {
 		set resp.http.Error-Message = req.http.Error-Message;
 	}
 
-	if(req.http.Origin && !resp.http.Access-Control-Allow-Origin){
-		set resp.http.Access-Control-Allow-Origin = req.http.Origin;
-	}
-
 	set resp.http.CDN-Cache-Control = resp.http.Cache-Control;
 
 	# Copy the outbound-cache-control headers to cache-control, otherwise 'no-cache'
 	if (resp.http.Outbound-Cache-Control) {
 		set resp.http.Cache-Control = resp.http.Outbound-Cache-Control;
+		unset resp.http.Outbound-Cache-Control;
 	} else {
 		set resp.http.Cache-Control = "no-cache, no-store, must-revalidate, max-age=0";
 	}

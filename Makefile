@@ -17,10 +17,10 @@ test:
 	nbt verify --skip-layout-checks
 
 build-production:
-	nbt about
+	nbt build --skip-js --skip-sass
 
 provision:
-	nbt about
+	nbt build --skip-js --skip-sass
 	nbt provision ${TEST_HOST}
 	nbt configure ft-next-ab ${TEST_HOST} --overrides "NODE_ENV=branch" --no-splunk
 	nbt deploy ${TEST_HOST} --skip-enable-preboot
