@@ -30,7 +30,7 @@ tidy:
 	nbt destroy ${TEST_HOST}
 
 deploy:
-	nbt configure --no-splunk
+	nbt configure
 	nbt deploy
 
 deploy-fastly:
