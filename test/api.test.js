@@ -43,7 +43,7 @@ describe('API', function () {
 				return res.json();
 			})
 			.then(function (res) {
-				expect(res.flagsWithABTests[0].name).to.equal('aa');
+				expect(res.flagsWithABTests.some(test => test.name === 'aa')).to.be.true;
 				done();
 			}).catch(err);
 	});
@@ -55,7 +55,7 @@ describe('API', function () {
 			}
 		})
 		.then(function (res) {
-			expect(res.headers.get('x-ft-ab')).to.match(/aa:(on|off)/);
+			expect(res.headers.get('x-ft-ab')).to.match(/aa:(default|variant)/);
 			expect(res.headers.get('ft-allocation-id')).to.equal('abc-123');
 			done();
 		}).catch(err);
