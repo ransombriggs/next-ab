@@ -24,7 +24,7 @@ describe('Promise of ID', function () {
 		this.mitm.on('request', function(req, res) {
 			if (req.headers['ft-session-token'] === 'z3MN_fJbrEOi07YfudMM2Trlzw') {
 				res.statusCode = 200;
-				res.end('{"uuid":"de305d54-75b4-431b-adb2-eb6b9e546014"}');
+				res.end('{"uuid":"de305d54-75b4-431b-adb2-eb6b9e546014","creationTime": 1446633501488,"rememberMe": true}');
 			}
 		});
 
