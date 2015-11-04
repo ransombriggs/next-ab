@@ -42,7 +42,7 @@ app.use(function(req, res, next) {
 	var apikey = req.get('api-key') || 'none';
 	metrics.count('api-key.' + apikey, 1);
 	next();
-}););
+});
 
 // Set the A/B tests array as a local variable
 app.use(setABTests);
