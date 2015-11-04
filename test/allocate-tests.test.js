@@ -2,7 +2,7 @@
 
 'use strict';
 
-const allocate = require('../server/allocate');
+const allocate = require('../server/lib/allocate-tests');
 const expect = require('chai').expect;
 
 // Note: These are AB tests, not unit tests.

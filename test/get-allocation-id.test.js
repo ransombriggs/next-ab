@@ -2,7 +2,7 @@
 
 'use strict';
 
-const promiseOfId	= require('../server/promise-of-id');
+const promiseOfId	= require('../server/lib/get-allocation-id');
 const expect = require('chai').expect;
 const mitm = require('mitm');
 const sinon = require('sinon');
@@ -22,9 +22,9 @@ describe('Promise of ID', function () {
 	it('Should derive a UUID from the session token', function (done) {
 
 		this.mitm.on('request', function(req, res) {
-			if (req.headers['ft-session-token'] === 'z3MN_fJbrEOi07YfudMM2Trlzw') {
+			if (req.url === '/membership/sessions/z3MN_fJbrEOi07YfudMM2Trlzw') {
 				res.statusCode = 200;
-				res.end('{"uuid":"de305d54-75b4-431b-adb2-eb6b9e546014"}');
+				res.end('{"uuid":"de305d54-75b4-431b-adb2-eb6b9e546014","creationTime": 1446633501488,"rememberMe": true}');
 			}
 		});
 
