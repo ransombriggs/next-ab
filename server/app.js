@@ -39,7 +39,7 @@ app.get('/__docs', function(req, res) {
 
 // Count where traffic is comming from
 app.use(function(req, res, next) {
-	var apikey = req.get('api-key') || 'missing';
+	var apikey = req.get('api-key') || 'none';
 	metrics.count('api-key.' + apikey, 1);
 	next();
 }););
