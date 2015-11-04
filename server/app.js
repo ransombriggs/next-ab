@@ -5,6 +5,9 @@ const express = require('ft-next-express');
 const setABTests = require('./middleware/set-ab-tests');
 const metrics = express.metrics;
 const nHealth = require('n-health');
+
+express.logger.addSplunk(process.env.SPLUNK_URL);
+
 const app = module.exports = express({
 	withHandlebars: false,
 	withBackendAuthentication: false,
@@ -24,6 +27,8 @@ const app = module.exports = express({
 		})
 	]
 });
+
+
 
 app.get('/favicon.ico', function(req, res) {
 	res.status(404).end();
