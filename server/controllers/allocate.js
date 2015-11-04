@@ -1,7 +1,5 @@
 'use strict';
 
-
-
 // Set the allocation ID as a local variable.
 const getAllocationID = require('../lib/get-allocation-id');
 const metrics = require('ft-next-express').metrics;
@@ -9,25 +7,17 @@ const allocateTests = require('../lib/allocate-tests');
 
 module.exports = function(req, res, next) {
 
-	next();
-};
-
-module.exports = function(req, res, next) {
-
-	if (!res.locals.tests || res.locals.tests.flagsWithABTests.length === 0) {
-		metrics.count('allocation.failed.tests', 1);
-		res.sendStatus(502);
-	})
-
 	getAllocationID(req, res)
 		.then(user => {
 			res.locals.user = user;
-		}, err => {
+		}, () => {
 				metrics.count('allocation.failed.uuid', 1);
-				throw undefined;
 		})
 		.then(() => {
 			const allocation = allocateTests(res.locals.tests, res.locals.user);
+			if (!allocation) {
+				metrics.count('allocation.failed.tests', 1);
+			}
 			res.set('x-ft-ab', (allocation) ? allocation : '-');
 			if (allocation) {
 				res.set('ft-allocation-id', res.locals.user.uuid);
@@ -56,11 +46,5 @@ module.exports = function(req, res, next) {
 				.status(200)
 				.send('OK');
 		})
-		.catch(e => {
-			if (e) throw e;
-		})
 		.catch(next);
-
-
-
-}
+};

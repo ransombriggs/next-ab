@@ -2,7 +2,7 @@
 
 'use strict';
 
-const allocate = require('../server/allocate');
+const allocate = require('../server/lib/allocate-tests');
 const expect = require('chai').expect;
 
 // Note: These are AB tests, not unit tests.
@@ -51,7 +51,7 @@ describe('Allocate', function () {
 			anonymousTests: [test_1, test_2]
 		}, {uuid: 'a3fe0b06-9e43-11e3-b429-00144feab7de'})).to.deep.equal('foo:on,boo:on');
 	});
-	
+
 	it('should only allocate an anonymous user to the anonymous tests', function() {
 		expect(allocate({
 			flagsWithABTests: [test_1, test_2, test_4, test_5],
@@ -59,7 +59,7 @@ describe('Allocate', function () {
 			subscriberTests: [test_2, test_5]
 		}, {uuid: 'n3fe0b06-9e43-11e3-b429-00144feab7de'})).to.deep.equal('foo:on,ANONonly:off');
 	});
-	
+
 	it('should only allocate a subscriber to the subscriber tests', function() {
 		expect(allocate({
 			flagsWithABTests: [test_1, test_2, test_4, test_5],

@@ -2,8 +2,6 @@
 'use strict';
 
 const express = require('ft-next-express');
-const setAllocationID = require('./middleware/set-allocation-id');
-const setAllocationHeader = require('./middleware/set-allocation-header');
 const setABTests = require('./middleware/set-ab-tests');
 const metrics = express.metrics;
 const nHealth = require('n-health');
@@ -45,12 +43,6 @@ app.use(setABTests);
 app.get('/__tests', function(req, res) {
 	res.json(res.locals.tests);
 });
-
-// Set the allocation ID as a local variable
-app.use(setAllocationID);
-
-// Set the A/B allocation as a response header
-app.use(setAllocationHeader);
 
 app.get('/*', require('./controllers/allocate'));
 

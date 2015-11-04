@@ -7,6 +7,10 @@ const seedrandom = require('seedrandom');
 // but evenly allocate users into an A/B segment, per test.
 module.exports = function(tests, user) {
 
+	if (!(user && tests && tests.flagsWithABTests.length)) {
+		return false;
+	}
+
 	metrics.count('allocation.count', 1);
 
 	const allocatedTests = user.isSubscriber ? tests.subscriberTests : tests.anonymousTests;
