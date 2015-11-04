@@ -43,7 +43,7 @@ describe('API', function () {
 				return res.json();
 			})
 			.then(function (res) {
-				expect(res.flagsWithABTests[0].name).to.equal('aa');
+				expect(res.flagsWithABTests.some(test => test.name === 'aa')).to.be.true;
 				done();
 			}).catch(err);
 	});
@@ -76,7 +76,7 @@ describe('API', function () {
 					if (process.env.AMMIT_HOST) {
 						expect(res.headers.get('cache-control')).to.equal('private, max-age=0, no-cache');
 					} else {
-						expect(res.headers.get('cache-control')).to.equal('max-age=3600, public, stale-while-revalidate=3600, stale-if-error=86400');
+						expect(res.headers.get('cache-control')).to.equal('max-age=10800, public, stale-while-revalidate=10800, stale-if-error=86400');
 						expect(res.headers.get('outbound-cache-control')).to.equal('private, max-age=0, no-cache');
 						expect(res.headers.get('vary')).to.equal('ft-allocation-id, ft-session-token');
 						fetchMock.restore();
@@ -95,7 +95,7 @@ describe('API', function () {
 					if (process.env.AMMIT_HOST) {
 						expect(res.headers.get('cache-control')).to.equal('private, max-age=0, no-cache');
 					} else {
-						expect(res.headers.get('cache-control')).to.equal('max-age=3600, public, stale-while-revalidate=3600, stale-if-error=86400');
+						expect(res.headers.get('cache-control')).to.equal('max-age=10800, public, stale-while-revalidate=10800, stale-if-error=86400');
 						expect(res.headers.get('outbound-cache-control')).to.equal('private, max-age=0, no-cache');
 						expect(res.headers.get('vary')).to.equal('ft-allocation-id, ft-session-token');
 					}

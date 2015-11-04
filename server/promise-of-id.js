@@ -26,9 +26,10 @@ module.exports = function(req) {
 
 	// If an ft-session-token is provided, attempt to load uuid via the session api.
 	if (sessionToken) {
-		return fetch('https://session-next.ft.com/uuid', {
-			headers: {
-				'ft-session-token': sessionToken
+		return fetch('https://sessionapi-glb.memb.ft.com/membership/sessions/' + sessionToken, {
+			headers : {
+				'FT_Api_Key' : process.env.SESSION_SERVICE_APIKEY,
+				'Accept': 'application/json'
 			}
 		})
 		.then(function(response) {
