@@ -2,7 +2,7 @@
 
 'use strict';
 
-const promiseOfId	= require('../server/promise-of-id');
+const promiseOfId	= require('../server/lib/get-allocation-id');
 const expect = require('chai').expect;
 const mitm = require('mitm');
 const sinon = require('sinon');
