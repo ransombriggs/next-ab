@@ -39,14 +39,14 @@ describe('Allocate', function () {
 		expect(allocate({
 			flagsWithABTests: [test_1],
 			anonymousTests: [test_1]
-		}, user)).to.deep.equal('foo:default');
+		}, user)).to.deep.equal('foo:control');
 	});
 
 	it('Should allocate a user to multiple tests', function () {
 		expect(allocate({
 			flagsWithABTests: [test_1, test_2, test_3],
 			anonymousTests: [test_1, test_2, test_3]
-		}, {uuid: 'n3fe0b06-9e43-11e3-b429-00144feab7de'})).to.deep.equal('foo:variant,boo:default,coo:default');
+		}, {uuid: 'n3fe0b06-9e43-11e3-b429-00144feab7de'})).to.deep.equal('foo:variant,boo:control,coo:control');
 		expect(allocate({
 			flagsWithABTests: [test_1, test_2],
 			anonymousTests: [test_1, test_2]
@@ -58,7 +58,7 @@ describe('Allocate', function () {
 			flagsWithABTests: [test_1, test_2, test_4, test_5],
 			anonymousTests: [test_1, test_4],
 			subscriberTests: [test_2, test_5]
-		}, {uuid: 'n3fe0b06-9e43-11e3-b429-00144feab7de'})).to.deep.equal('foo:variant,ANONonly:default');
+		}, {uuid: 'n3fe0b06-9e43-11e3-b429-00144feab7de'})).to.deep.equal('foo:variant,ANONonly:control');
 	});
 
 	it('should only allocate a subscriber to the subscriber tests', function() {
@@ -66,19 +66,19 @@ describe('Allocate', function () {
 			flagsWithABTests: [test_1, test_2, test_4, test_5],
 			anonymousTests: [test_1, test_4],
 			subscriberTests: [test_2, test_5]
-		}, {uuid: 'n3fe0b06-9e43-11e3-b429-00144feab7de', isSubscriber: true})).to.deep.equal('boo:default,SUBonly:default');
+		}, {uuid: 'n3fe0b06-9e43-11e3-b429-00144feab7de', isSubscriber: true})).to.deep.equal('boo:control,SUBonly:control');
 	});
 
 	it('Should allocate the tests within the users range', function () {
 		expect(allocate({
 			flagsWithABTests: [test_6, test_7],
 			anonymousTests: [test_6, test_7]
-		}, user)).to.deep.equal('InRangeA:default');
+		}, user)).to.deep.equal('InRangeA:control');
 
 		expect(allocate({
 			flagsWithABTests: [test_6, test_7],
 			anonymousTests: [test_6, test_7]
-		}, {uuid: 'a3fe0b06-9e43-11e3-b429-00144feab7de'})).to.deep.equal('InRangeB:default');
+		}, {uuid: 'a3fe0b06-9e43-11e3-b429-00144feab7de'})).to.deep.equal('InRangeB:control');
 	});
 
 	it('Should not allocate tests with bad ranges', function () {
@@ -94,7 +94,7 @@ describe('Allocate', function () {
 		expect(allocate({
 			flagsWithABTests: [mvt],
 			anonymousTests: [mvt]
-		}, {uuid: user.uuid})).to.equal('mvt:default');
+		}, {uuid: user.uuid})).to.equal('mvt:control');
 		expect(allocate({
 			flagsWithABTests: [mvt],
 			anonymousTests: [mvt]
