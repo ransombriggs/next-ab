@@ -15,7 +15,7 @@ module.exports = function(req, res, next) {
 		})
 		.then(() => {
 			const allocation = allocateTests(res.locals.tests, res.locals.user);
-			if (!allocation) {
+			if (res.locals.user && !allocation) {
 				metrics.count('allocation.failed.tests', 1);
 			}
 			res.set('x-ft-ab', (allocation) ? allocation : '-');
