@@ -14,24 +14,27 @@ module.exports = function(req, res, next) {
 				metrics.count('allocation.failed.uuid', 1);
 		})
 		.then(() => {
-			const allocation = allocateTests(res.locals.tests, res.locals.user);
-			if (res.locals.user && !allocation) {
-				metrics.count('allocation.failed.tests', 1);
-			}
-			res.set('x-ft-ab', (allocation) ? allocation : '-');
-			if (allocation) {
-				res.set('ft-allocation-id', res.locals.user.uuid);
+			let allocation;
+
+			if (res.locals.user) {
+				allocation = allocateTests(res.locals.tests, res.locals.user);
+				if (allocation) {
+					res.set('ft-allocation-id', res.locals.user.uuid);
+				} else {
+					metrics.count('allocation.failed.tests', 1);
+				}
 			}
 
+			res.set('x-ft-ab', (allocation) ? allocation : '-');
+
 			const sessionToken = req.get('ft-session-token') || req.get('x-ft-session-token');
+
 			if (sessionToken) {
 				res.set('ft-session-token', sessionToken);
 			}
 		})
 		.then(() => {
-			// Metrics: Who's asking for the allocation?
-			// FIXME - var interrogator = req.get('ft-interrogator') || 'unknown';
-			// metrics.count('interrogator.'+interrogator, 1);
+
 			if (req.get('ft-session-token') || req.get('ft-allocation-id')) {
 				res
 					.set('Cache-Control', 'max-age=10800, public, stale-while-revalidate=10800, stale-if-error=86400')

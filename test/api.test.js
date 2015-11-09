@@ -11,7 +11,7 @@ if (process.env.AMMIT_HOST) {
 } else {
 	app = require('../server/app');
 	host = 'http://localhost:5101';
-	fetchMock = require('fetch-mock');
+	fetchMock = require('fetch-mock/src/server');
 }
 
 const expect = require('chai').expect;
