@@ -19,7 +19,7 @@ describe('Promise of ID', function () {
 		this.mitm.disable();
 	});
 
-	it('Should derive a UUID from the session token', function (done) {
+	it.skip('Should derive a UUID from the session token', function (done) {
 
 		this.mitm.on('request', function(req, res) {
 			if (req.url === '/membership/sessions/z3MN_fJbrEOi07YfudMM2Trlzw') {
