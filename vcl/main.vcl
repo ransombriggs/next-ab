@@ -1,17 +1,17 @@
 backend ammit_service {
-	.connect_timeout = 1s;
+	.connect_timeout = 10s;
 	.dynamic = true;
 	.port = "80";
 	.host = "ft-next-ab.herokuapp.com";
 	.host_header = "ft-next-ab.herokuapp.com";
 	.first_byte_timeout = 15s;
-	.max_connections = 200;
+	.max_connections = 1000;
 	.between_bytes_timeout = 10s;
 
 	.probe = {
 		.request = "HEAD /__gtg HTTP/1.1" "Host: ft-next-ab.herokuapp.com" "Connection: close" "User-Agent: Varnish/fastly (healthcheck)";
 		.threshold = 1;
-		.window = 2;
+		.window = 4;
 		.timeout = 5s;
 		.initial = 1;
 		.expected_response = 200;
