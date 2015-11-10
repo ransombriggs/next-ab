@@ -1,5 +1,5 @@
 backend ammit_service {
-	.connect_timeout = 1s;
+	.connect_timeout = 10s;
 	.dynamic = true;
 	.port = "80";
 	.host = "ft-next-ab.herokuapp.com";
