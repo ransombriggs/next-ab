@@ -19,10 +19,10 @@ describe('Promise of ID', function () {
 		this.mitm.disable();
 	});
 
-	it.skip('Should derive a UUID from the session token', function (done) {
+	it('Should derive a UUID from the session token', function (done) {
 
 		this.mitm.on('request', function(req, res) {
-			if (req.url === '/membership/sessions/z3MN_fJbrEOi07YfudMM2Trlzw') {
+			if (req.url === '/uuid') {
 				res.statusCode = 200;
 				res.end('{"uuid":"de305d54-75b4-431b-adb2-eb6b9e546014","creationTime": 1446633501488,"rememberMe": true}');
 			}
