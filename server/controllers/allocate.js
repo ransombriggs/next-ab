@@ -49,7 +49,11 @@ module.exports = function(req, res, next) {
 				.status(200)
 				.send('OK');
 
-			metrics.count(`response.quarter_seconds_taken.${Math.floor((Date.now() - res.locals.requestStart) / 250)}`);
+			let quarterSeconds = Math.ceil((Date.now() - res.locals.requestStart) / 250);
+			while(quarterSeconds--) {
+				metrics.count(`response.quarter_seconds.${quarterSeconds}`);
+			}
+
 		})
 		.catch(next);
 };
