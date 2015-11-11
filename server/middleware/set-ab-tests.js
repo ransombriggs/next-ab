@@ -17,9 +17,7 @@ setInterval(setCalibrationOffsets, 60 * 60 * 1000)
 // Set the AB tests array as a local variable.
 module.exports = function(req, res, next) {
 
-	// Note: res.locals.flagsArray is provided by next-feature-flags-client@8
-	// Note: res.locals.flagsRaw will be provided by next-feature-flags-client@9
-	const flagsWithABTests = (res.locals.flagsRaw || res.locals.flagsArray).filter(flag => flag.abTestState);
+	const flagsWithABTests = res.locals.flagsRaw.filter(flag => flag.abTestState);
 
 	flagsWithABTests.forEach(f => {
 		if (f.name === 'aa' || f.name === 'aaa') {

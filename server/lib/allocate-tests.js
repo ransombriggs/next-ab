@@ -27,11 +27,21 @@ module.exports = function(tests, user) {
 	});
 
 	const allocation = testsInRange.map(function (test) {
-		let rng = seedrandom(user.uuid + test.name);
-		let group = (rng() > 0.5) ? 'off' : 'on';
+		const variants = (test.abTestSetup && test.abTestSetup.variants) ? test.abTestSetup.variants.concat(['control']) : ['variant', 'control'];
+		let index = Math.floor(seedrandom(user.uuid + test.name)() * variants.length);
+		let group = variants[index];
 
 		// Metrics: Track A/B allocation
-		metrics.count('allocation.' + test.name + '.' + group, 1);
+		metrics.count(`allocation.${test.name}.${group}`, 1);
+
+		// HACK: Track legacy allocations for a little while to avoid healthchecks going insane
+		if (variants.length === 2) {
+			if (group === 'control') {
+				metrics.count(`allocation.${test.name}.off`, 1);
+			} else if (group === 'variant') {
+				metrics.count(`allocation.${test.name}.on`, 1);
+			}
+		}
 
 		return test.name + ':' + group;
 	});
