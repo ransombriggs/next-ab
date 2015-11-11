@@ -5,16 +5,19 @@
 let host;
 let app;
 let fetchMock;
+const expect = require('chai').expect;
 
 if (process.env.AMMIT_HOST) {
 	host = process.env.AMMIT_HOST;
 } else {
-	app = require('../server/app');
-	host = 'http://localhost:5101';
 	fetchMock = require('fetch-mock/src/server');
+	fetchMock.mock('http://next-flags.ft.com/', require('./fixtures/flags'));
+	app = require('../server/app');
+	fetchMock.restore();
+	host = 'http://localhost:5101';
 }
 
-const expect = require('chai').expect;
+
 
 const err = function (err) {
 	console.error(err, err.stack);
@@ -55,7 +58,7 @@ describe('API', function () {
 			}
 		})
 		.then(function (res) {
-			expect(res.headers.get('x-ft-ab')).to.match(/aa:(on|off)/);
+			expect(res.headers.get('x-ft-ab')).to.match(/abANON:(on|off),abBOTH:(on|off)/);
 			expect(res.headers.get('ft-allocation-id')).to.equal('abc-123');
 			done();
 		}).catch(err);
@@ -125,7 +128,5 @@ describe('API', function () {
 			done();
 		}).catch(err);
 	});
-
-
 
 });

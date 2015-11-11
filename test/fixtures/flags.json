@@ -1,0 +1,73 @@
+[
+	{
+			"name": "aa",
+			"safeSate": false,
+			"state": false,
+			"expiry": "2030-01-01T00:00:00.000Z",
+			"cohorts": ["subscriber", "anonymous"],
+			"abTestSetup": {
+				"offset": 0,
+				"range": 100
+			},
+			"abTestState": true
+		},
+		{
+			"name": "aaa",
+			"safeSate": false,
+			"state": false,
+			"expiry": "2030-01-01T00:00:00.000Z",
+			"cohorts": ["subscriber", "anonymous"],
+			"abTestSetup": {
+				"offset": 0,
+				"range": 100,
+				"variants": ["a1", "a2"]
+			},
+			"abTestState": true
+		},
+		{
+			"name": "abANON",
+			"safeSate": false,
+			"state": false,
+			"expiry": "2030-01-01T00:00:00.000Z",
+			"abTestState": true,
+			"abTestSetup": {
+				"offset": 0,
+				"range": 100
+			},
+			"cohorts": ["anonymous"]
+		},
+		{
+			"name": "abSUB",
+			"safeSate": false,
+			"state": false,
+			"expiry": "2030-01-01T00:00:00.000Z",
+			"abTestState": true,
+			"abTestSetup": {
+				"offset": 0,
+				"range": 100
+			},
+			"cohorts": ["subscriber"]
+		},
+		{
+			"name": "abBOTH",
+			"safeSate": false,
+			"state": false,
+			"expiry": "2030-01-01T00:00:00.000Z",
+			"abTestState": true,
+			"abTestSetup": {
+				"offset": 0,
+				"range": 100
+			},
+			"cohorts": ["subscriber", "anonymous"]
+		},
+		{
+			"name": "NOTaa",
+			"safeSate": false,
+			"state": false,
+			"abTestSetup": {
+				"offset": 0,
+				"range": 100
+			},
+			"expiry": "2030-01-01T00:00:00.000Z"
+		}
+]
