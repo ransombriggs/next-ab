@@ -34,15 +34,6 @@ module.exports = function(tests, user) {
 		// Metrics: Track A/B allocation
 		metrics.count(`allocation.${test.name}.${group}`, 1);
 
-		// HACK: Track legacy allocations for a little while to avoid healthchecks going insane
-		if (variants.length === 2) {
-			if (group === 'control') {
-				metrics.count(`allocation.${test.name}.off`, 1);
-			} else if (group === 'variant') {
-				metrics.count(`allocation.${test.name}.on`, 1);
-			}
-		}
-
 		return test.name + ':' + group;
 	});
 
