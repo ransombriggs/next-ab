@@ -7,8 +7,8 @@ let aaOffset;
 let aaaOffset;
 
 function setCalibrationOffsets () {
-	aaOffset = 5 * Math.floor(seedrandom(new Date().getMonth() + new Date().getYear())() * 20);
-	aaaOffset = (aaOffset + 5) % 100;
+	aaOffset = 10 * Math.floor(seedrandom(new Date().getMonth() + new Date().getYear())() * 10);
+	aaaOffset = (aaOffset + 10) % 100;
 }
 
 setCalibrationOffsets();
@@ -21,7 +21,7 @@ module.exports = function(req, res, next) {
 
 	flagsWithABTests.forEach(f => {
 		if (f.name === 'aa' || f.name === 'aaa') {
-			f.abTestSetup.range = 5;
+			f.abTestSetup.range = 10;
 
 			if (f.name === 'aa') {
 				f.abTestSetup.offset = aaOffset;
