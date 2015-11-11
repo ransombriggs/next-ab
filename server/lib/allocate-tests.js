@@ -33,7 +33,8 @@ module.exports = function(tests, user) {
 
 		// Metrics: Track A/B allocation
 		metrics.count(`allocation.${test.name}.${group}`, 1);
-
+		// Temporarily log totally random allocations to test reliability
+		metrics.count(`allocation.${test.name}.random.${variants[Math.floor(Math.random() * variants.length)]}`, 1);
 		return test.name + ':' + group;
 	});
 
