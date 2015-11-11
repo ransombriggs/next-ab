@@ -28,13 +28,6 @@ describe('Allocate', function () {
 		expect(allocate({flagsWithABTests: []}, user)).to.equal(false);
 	});
 
-	it('Should not allocate users if the allocation id is not defined', function () {
-		expect(allocate({
-			flagsWithABTests: [test_1, test_2],
-			anonymousTests: [test_1, test_2]
-		}, undefined)).to.equal(false);
-	});
-
 	it('Should allocate a user to a single test', function () {
 		expect(allocate({
 			flagsWithABTests: [test_1],

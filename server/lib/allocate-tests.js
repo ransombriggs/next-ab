@@ -7,7 +7,7 @@ const seedrandom = require('seedrandom');
 // but evenly allocate users into an A/B segment, per test.
 module.exports = function(tests, user) {
 
-	if (!(user && tests && tests.flagsWithABTests.length)) {
+	if (!(tests && tests.flagsWithABTests.length)) {
 		return false;
 	}
 

@@ -31,7 +31,7 @@ tidy:
 
 deploy:
 	nbt configure
-	nbt deploy
+	nbt deploy --skip-logging
 
 deploy-fastly:
 	nbt deploy-vcl -e --service FASTLY_SERVICE_ID --vars SERVICEID --main main.vcl ./vcl/

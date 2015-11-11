@@ -37,6 +37,19 @@ app.get('/__docs', function(req, res) {
 	res.redirect(301, 'https://ft-next-ammit.herokuapp.com/');
 });
 
+// Start timer
+app.use(function(req, res, next) {
+	res.locals.requestStart = Date.now();
+	next();
+});
+
+// Count where traffic is comming from
+app.use(function(req, res, next) {
+	var apikey = req.get('api-key') || 'none';
+	metrics.count('api-key.' + apikey, 1);
+	next();
+});
+
 // Set the A/B tests array as a local variable
 app.use(setABTests);
 
